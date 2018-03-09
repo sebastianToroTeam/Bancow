@@ -46,7 +46,13 @@ public class NegocioUsuario extends NegocioAbstracto<Usuario> {
 		return Logger.getLogger(getClass());
 	} 
 
-    
+    public Usuario validarUsuario(String usr, String pass){
+        Usuario usuario = manejadorUsuario.buscar(usr);
+        if(usuario != null && pass.equals(usuario.getPwd())){
+            return usuario;
+        }
+        return null;
+    }
     // protected region Use esta region para su implementacion de otros metodos on begin
     
     

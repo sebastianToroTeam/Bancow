@@ -263,6 +263,5 @@ public class UsuarioManagedBean implements Serializable {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-
    
 }
