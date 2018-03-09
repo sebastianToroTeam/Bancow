@@ -1,0 +1,143 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/mainTemplate.xhtml">
+	<ui:param name="controlador" value="#{correoManagedBean}" />
+
+	<ui:define name="content">
+
+		<div class="ui-g">
+			<div class="ui-g-12 ui-md-12 ui-g-nopad">
+				<div class="ui-g-12">
+					<h:form>
+						<!-- <p:growl id="growl" showDetail="true" />-->						
+
+						<div class="ui-g-12 ui-g-nopad">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12">
+                                                                    <b>Listado de correos para notificación de carga</b>
+								</div>
+								
+								<ui:include src="../filterTemplate.xhtml"/>
+								
+								<div class="ui-g-12 ui-md-12">
+									<p:dataTable id="ResultData" var="correo"
+										value="#{controlador.correoList}" reflow="true"
+										widgetVar="entidadTable"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+										paginator="true" rows="10" style="margin-bottom:20px"
+										editable="true">
+
+										<f:facet name="header">
+											<p:growl id="growl" showDetail="true" />
+											<p:commandButton value="Nuevo" icon="ui-icon-star"
+												actionListener="#{controlador.createCorreoWithForm}" action="correoForm">
+											</p:commandButton>
+
+										</f:facet>
+
+										<f:facet name="{Exporters}">
+
+											<h:commandLink>
+												<p:graphicImage name="images/csv.png" width="24" />
+												<p:dataExporter type="csv" target="ResultData"
+													fileName="correo" />
+											</h:commandLink>
+
+											<h:commandLink>
+												<p:graphicImage name="images/xml.png" width="24" />
+												<p:dataExporter type="xml" target="ResultData"
+													fileName="correo" />
+											</h:commandLink>
+										</f:facet>
+										
+										<p:growl id="msgs" showDetail="true"/>
+										
+										<p:ajax event="rowEdit" listener="#{controlador.onRowEdit}" update="msgs" />
+       									<p:ajax event="rowEditCancel" listener="#{controlador.onRowCancel}" update="msgs" />
+
+										<p:column style="width:32px" exportable="false">
+											<p:rowEditor icon="ui-icon-star"/>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Funcionario Asignado" />
+											</f:facet>
+                                                                                    <h:outputText value="#{correo.funcionariocorreoFuncionarioFk.nombres} #{correo.funcionariocorreoFuncionarioFk.apellidos}" />
+											
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Mail" />
+											</f:facet>                                                                                    
+                                                                                    <p:cellEditor>
+												<f:facet name="output">
+													<h:outputText value="#{correo.mail}" />
+												</f:facet>
+												<f:facet name="input">
+													<p:inputText value="#{correo.mail}" style="width:100%" />
+												</f:facet>
+										    </p:cellEditor>
+										</p:column>	
+										<p:column>
+											<f:facet name="header">
+												<h:outputText value="Estado " />
+											</f:facet>
+											<p:cellEditor>
+												<f:facet name="output">
+													<h:outputText value="#{correo.estado == 'a' ? 'Activo' : 'Inactivo'}" />
+												</f:facet>
+												<f:facet name="input">
+                                                                                                        <p:selectOneMenu  value="#{correo.estado}" required="true" label="Estado">
+                                                                                                            <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                                            <f:selectItem itemLabel="Activo" itemValue="a"  />
+                                                                                                            <f:selectItem itemLabel="Inactivo" itemValue="i" />
+                                                                                                         </p:selectOneMenu>
+												</f:facet>
+											</p:cellEditor>
+										</p:column>
+
+							
+
+										<p:column>
+											<f:facet name="header" exportable="false">
+												<h:outputText value="Options" />
+											</f:facet>
+
+											<p:growl id="message" showDetail="true" />
+
+											<p:commandButton icon="fa fa-fw fa-trash-o"
+												actionListener="#{controlador.deleteCorreo(correo)}"
+												update="message, ResultData">
+												<p:confirm header="Confirmation" message="�Esta seguro?"
+													icon="ui-icon-alert" />
+											</p:commandButton>
+
+											<p:confirmDialog global="true" showEffect="fade"
+												hideEffect="fade">
+												<p:commandButton value="Si" type="button"
+													styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+												<p:commandButton value="No" type="button"
+													styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+											</p:confirmDialog>
+										</p:column>
+
+									</p:dataTable>
+								</div>
+							</div>
+						</div>
+
+
+					</h:form>
+
+				</div>
+
+			</div>
+		</div>
+
+
+	</ui:define>
+
+</ui:composition>

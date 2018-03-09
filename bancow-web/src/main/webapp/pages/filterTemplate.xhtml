@@ -1,0 +1,82 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	
+		<div id="searchFilter" class="ui-g-12 ui-md-12">
+                    <p:commandButton icon="fa fa-plus" value="Agregar Criterio"
+						action="#{controlador.addSearchExpressionCriteria()}"
+						process="@form" update="@form" />
+                    
+			<p:dataTable id="criteriaOptions" var="sel" value="#{controlador.searchExpressionList}" reflow="true" rows="5"
+                                     rendered="#{controlador.searchExpressionList.size()>0}">
+
+				<p:column headerText="Compuesto">
+					<p:selectOneMenu value="#{sel.compound}" style="width:125px">
+						<f:selectItem itemLabel="Seleccione uno" itemValue="" />
+						<f:selectItems value="#{controlador.getCompoundMethods()}"/>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Campo">
+					<p:selectOneMenu value="#{sel.field}" style="width:125px">
+						<f:selectItem itemLabel="Seleccione uno" itemValue="" />
+						<f:selectItems value="#{controlador.getFieldDomainList()}"/>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Criterio">
+					<p:selectOneMenu value="#{sel.method}" style="width:125px">
+						<f:selectItem itemLabel="Seleccione uno" itemValue="" />
+						<f:selectItems value="#{controlador.getMethods()}" />
+					</p:selectOneMenu>
+				</p:column>
+					<p:column headerText="Valores">
+					<p:chips value="#{sel.values}" />
+				</p:column>
+				<p:column headerText="Opciones">
+					<p:commandButton icon="fa fa-fw fa-remove"
+						action="#{controlador.removeSearchExpressionCriteria(sel)}"
+						update="@form" />
+				</p:column>
+			</p:dataTable>
+		</div>
+		<div id="searchOrder" class="ui-g-12 ui-md-12">
+                    <p:commandButton icon="fa fa-plus" value="Agregar orden"
+						action="#{controlador.addSearchOrder()}"
+						process="@form" update="@form" />
+			<p:dataTable id="orderOptions" var="sol"
+				value="#{controlador.searchOrderList}" reflow="true"
+				rows="5"
+                                rendered="#{controlador.searchOrderList.size()>0}">
+
+				<p:column headerText="Campo">
+					<p:selectOneMenu value="#{sol.field}" style="width:125px">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{controlador.getFieldDomainList()}"/>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Tipo">
+					<p:selectOneMenu value="#{sol.order}" style="width:125px">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{controlador.getOrderingList()}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column headerText="Opciones">
+				<p:commandButton icon="fa fa-fw fa-remove"
+					action="#{controlador.removeSearchOrder(sol)}"
+					update="@form" />
+				</p:column>
+			</p:dataTable>
+		</div>
+		<div class="ui-g-12 ui-md-12">
+			<p:commandButton value="Limpiar" process="@form" update="@form"
+				actionListener="#{controlador.reset()}" 
+                                rendered="#{controlador.searchExpressionList.size()>0 || controlador.searchOrderList.size()>0}"/>
+			<p:commandButton update="ResultData"
+				actionListener="#{controlador.search()}" value="Enviar"
+				process="@parent" icon="ui-icon-refresh"
+				oncomplete="PF('entidadTable').clearFilters()" 
+                                rendered="#{controlador.searchExpressionList.size()>0 || controlador.searchOrderList.size()>0}"/>
+		</div>
+		
+</ui:composition>

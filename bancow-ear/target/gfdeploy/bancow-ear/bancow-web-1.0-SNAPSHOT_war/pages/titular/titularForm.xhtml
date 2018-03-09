@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/mainTemplate.xhtml">
+	<ui:param name="controlador" value="#{titularFormManagedBean}" />
+	
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12 ui-md-12 ui-g-nopad">
+				<div class="ui-g-12">
+					<h:form>
+						<!-- <p:growl id="growl" showDetail="true" />-->
+
+						<div class="ui-g-12 ui-g-nopad">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12">Lorem ipsum dolor sit amet,
+									consectetur adipiscing elit. Sed imperdiet, orci nec dictum
+									convallis, ligula mauris vestibulum turpis, nec varius tortor
+									quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus
+									quis vulputate. Pellentesque nec dui aliquam, lobortis est in,
+									lobortis ante</div>
+
+								<div class="ui-g-12 ui-md-12">
+									<p:panel header="Crear Titular">
+										<p:messages />
+
+										<h:panelGrid columns="4" cellpadding="5">
+											<h:outputLabel for="titular_identificacion" value="Identificacion:" />
+											<p:inputNumber id="titular_identificacion"
+												value="#{controlador.titular.identificacion}" label="Identificacion" />
+											<p:message for="titular_identificacion" />
+											<h:outputText value="#{controlador.titular.identificacion}" />
+											<h:outputLabel for="titular_nombres" value="Nombres:" />
+											<p:inputText id="titular_nombres"
+												value="#{controlador.titular.nombres}" label="Nombres" />
+											<p:message for="titular_nombres" />
+											<h:outputText value="#{controlador.titular.nombres}" />
+											<h:outputLabel for="titular_primerApellido" value="PrimerApellido:" />
+											<p:inputText id="titular_primerApellido"
+												value="#{controlador.titular.primerApellido}" label="PrimerApellido" />
+											<p:message for="titular_primerApellido" />
+											<h:outputText value="#{controlador.titular.primerApellido}" />
+											<h:outputLabel for="titular_segundoApellido" value="SegundoApellido:" />
+											<p:inputText id="titular_segundoApellido"
+												value="#{controlador.titular.segundoApellido}" label="SegundoApellido" />
+											<p:message for="titular_segundoApellido" />
+											<h:outputText value="#{controlador.titular.segundoApellido}" />
+										</h:panelGrid>
+
+									</p:panel>
+								</div>
+								<div class="ui-g-12 ui-md-12">
+									<p:commandButton
+										actionListener="#{controlador.createTitular()}"
+										value="Crear" ajax="false" validateClient="true"
+										process="@parent" icon="ui-icon-check" />
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>

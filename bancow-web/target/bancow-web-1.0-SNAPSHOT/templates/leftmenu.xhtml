@@ -1,0 +1,33 @@
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ps="http://primefaces.org/sentinel"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <div id="layout-menubar" class="Unselectable fontRegular">
+        <div class="layout-menubarinner-box" id="buttonArea">
+            <a href="#" id="layout-menubar-resize" class="BordRad3" title="Menu Resize"><i class="icon-th-list-2"></i></a>
+            <a href="#" id="layout-menubar-resize2" class="BordRad3" title="Open Menu"><i class="icon-menu"></i></a>
+        </div>
+        
+        <h:form id="menuform">
+            <ps:menu id="sm_leftmenu">
+                <p:menuitem id="sm_dashboard1" value="Home" icon="icon-home-outline" outcome="/pages/index" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard2" value="ArchivoProcesado" icon="icon-home-1" outcome="/pages/archivoProcesado/archivoProcesado" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard3" value="Convenio" icon="icon-home-1" outcome="/pages/convenio/convenio" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard4" value="Correo" icon="icon-home-1" outcome="/pages/correo/correo" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard5" value="CorreoEnviado" icon="icon-home-1" outcome="/pages/correoEnviado/correoEnviado" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard6" value="Cuenta" icon="icon-home-1" outcome="/pages/cuenta/cuenta" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard7" value="EncDominio" icon="icon-home-1" outcome="/pages/encDominio/encDominio" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard8" value="Funcionario" icon="icon-home-1" outcome="/pages/funcionario/funcionario" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard9" value="RegistroArchivo" icon="icon-home-1" outcome="/pages/registroArchivo/registroArchivo" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard10" value="Titular" icon="icon-home-1" outcome="/pages/titular/titular" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard11" value="Trasnferencia" icon="icon-home-1" outcome="/pages/trasnferencia/trasnferencia" rendered="true" containerStyleClass="layout-menubar-active"/>
+                <p:menuitem id="sm_dashboard12" value="Usuario" icon="icon-home-1" outcome="/pages/usuario/usuario" rendered="true" containerStyleClass="layout-menubar-active"/>
+            </ps:menu>
+        </h:form>
+    </div>
+
+</ui:composition>

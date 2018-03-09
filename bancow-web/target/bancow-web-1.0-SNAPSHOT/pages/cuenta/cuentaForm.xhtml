@@ -1,0 +1,77 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/mainTemplate.xhtml">
+	<ui:param name="controlador" value="#{cuentaFormManagedBean}" />
+	
+	<ui:define name="content">
+		<div class="ui-g">
+			<div class="ui-g-12 ui-md-12 ui-g-nopad">
+				<div class="ui-g-12">
+					<h:form>
+						<!-- <p:growl id="growl" showDetail="true" />-->
+
+						<div class="ui-g-12 ui-g-nopad">
+							<div class="ui-g">
+								<div class="ui-g-12 ui-md-12">Lorem ipsum dolor sit amet,
+									consectetur adipiscing elit. Sed imperdiet, orci nec dictum
+									convallis, ligula mauris vestibulum turpis, nec varius tortor
+									quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus
+									quis vulputate. Pellentesque nec dui aliquam, lobortis est in,
+									lobortis ante</div>
+
+								<div class="ui-g-12 ui-md-12">
+									<p:panel header="Crear Cuenta">
+										<p:messages />
+
+										<h:panelGrid columns="4" cellpadding="5">
+											<h:outputLabel for="cuenta_numero" value="Numero:" />
+											<p:inputText id="cuenta_numero"
+												value="#{controlador.cuenta.numero}" label="Numero" />
+											<p:message for="cuenta_numero" />
+											<h:outputText value="#{controlador.cuenta.numero}" />
+											<h:outputLabel for="cuenta_estado" value="Estado:" />
+											<p:inputText id="cuenta_estado"
+												value="#{controlador.cuenta.estado}" label="Estado" />
+											<p:message for="cuenta_estado" />
+											<h:outputText value="#{controlador.cuenta.estado}" />
+											<h:outputLabel for="cuenta_saldoDisponible" value="SaldoDisponible:" />
+											<p:inputNumber id="cuenta_saldoDisponible"
+												value="#{controlador.cuenta.saldoDisponible}" label="SaldoDisponible" />
+											<p:message for="cuenta_saldoDisponible" />
+											<h:outputText value="#{controlador.cuenta.saldoDisponible}" />
+											<h:outputLabel for="cuenta_gmf" value="Gmf:" />
+											<p:inputText id="cuenta_gmf"
+												value="#{controlador.cuenta.gmf}" label="Gmf" />
+											<p:message for="cuenta_gmf" />
+											<h:outputText value="#{controlador.cuenta.gmf}" />
+											<h:outputLabel for="cuenta_condicion" value="Condicion:" />
+											<p:inputText id="cuenta_condicion"
+												value="#{controlador.cuenta.condicion}" label="Condicion" />
+											<p:message for="cuenta_condicion" />
+											<h:outputText value="#{controlador.cuenta.condicion}" />
+											<h:outputLabel for="cuenta_titularNumeroId" value="TitularNumeroId:" />
+											<p:inputNumber id="cuenta_titularNumeroId"
+												value="#{controlador.cuenta.titularNumeroId}" label="TitularNumeroId" />
+											<p:message for="cuenta_titularNumeroId" />
+											<h:outputText value="#{controlador.cuenta.titularNumeroId}" />
+										</h:panelGrid>
+
+									</p:panel>
+								</div>
+								<div class="ui-g-12 ui-md-12">
+									<p:commandButton
+										actionListener="#{controlador.createCuenta()}"
+										value="Crear" ajax="false" validateClient="true"
+										process="@parent" icon="ui-icon-check" />
+								</div>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
