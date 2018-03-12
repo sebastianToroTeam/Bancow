@@ -254,11 +254,11 @@ public class ManejadorPersistencia<T> implements Serializable {
      * @param querystr Query nativo en formato sql
      * @return La lista con los resultados de la ejecución del query
      */
-    public List<Object[]> doNativeQuery(String querystr) {
+    public Query doNativeQuery(String querystr) {
 
         logger.debug("NATIVE QRY> " + querystr);
         
-        return em.createNativeQuery(querystr).getResultList();
+        return em.createNativeQuery(querystr);
 
     }
     

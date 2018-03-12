@@ -129,9 +129,9 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     /*
      */
     // traer los Convenios activos
-    /* public boolean ValidarNombreArchivo(String nombreArchivo) {
-        return negocioArchivoProcesado.listaConvenios();
-    }*/
+     public boolean ValidarNombreArchivo(String nombreArchivo) {
+        return negocioArchivoProcesado.ValidarNombreArchivo(nombreArchivo);
+    }
     //*************************************************
     ////validar contenido archivo
     //paso 2

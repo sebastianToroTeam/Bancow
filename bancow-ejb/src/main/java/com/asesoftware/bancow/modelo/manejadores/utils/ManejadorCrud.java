@@ -1,6 +1,8 @@
 package com.asesoftware.bancow.modelo.manejadores.utils;
 
 import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
+import com.asesoftware.bancow.modelo.entidades.DetDominio;
+import com.asesoftware.bancow.modelo.entidades.EncDominio;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +20,10 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
 import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Query;
 
 public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
@@ -300,24 +306,45 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
         if (sa.getType().getJavaType().isAnnotationPresent(Embeddable.class) && classHasField(c, nombreCampo)) {
             p = root.<Object>get(sa.getName());
         }
+
+        
+        boolean isDate = false;
+        try {
+            Class la = p.getModel().getBindableJavaType();
+            Field f = la.getDeclaredField(nombreCampo);
+            if(f.getType() == Date.class)
+                isDate= true;
+        } catch (NoSuchFieldException | SecurityException ex) {
+            Logger.getLogger(ManejadorCrud.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         switch (se.getMethod()) {
             case UtilConstantes.CR_EQUAL:
-                pd = cb.equal(p.<Object>get(nombreCampo), se.getValues().get(0).toString());
+                pd = cb.equal(p.<Object>get(nombreCampo), se.getValues().get(0));
                 break;
             case UtilConstantes.CR_NOT_EQUAL:
                 pd = cb.notEqual(p.<String>get(nombreCampo), se.getValues().get(0).toString());
                 break;
             case UtilConstantes.CR_GREATER_THAN:
-                pd = cb.greaterThan(p.<String>get(nombreCampo), se.getValues().get(0).toString());
+                if(isDate)
+                    pd = cb.greaterThan(p.<Date>get(nombreCampo), se.getValues().get(0));
+                else
+                    pd = cb.greaterThan(p.<String>get(nombreCampo), se.getValues().get(0).toString());
                 break;
             case UtilConstantes.CR_GREATER_EQUAL:
                 pd = cb.greaterThanOrEqualTo(p.<String>get(nombreCampo), se.getValues().get(0).toString());
                 break;
             case UtilConstantes.CR_LESS_THAN:
-                pd = cb.lessThan(p.<String>get(nombreCampo), se.getValues().get(0).toString());
+                if(isDate)
+                    pd = cb.lessThan(p.<Date>get(nombreCampo), se.getValues().get(0));
+                else
+                    pd = cb.lessThan(p.<String>get(nombreCampo), se.getValues().get(0).toString());
                 break;
             case UtilConstantes.CR_LESS_EQUAL:
-                pd = cb.lessThanOrEqualTo(p.<String>get(nombreCampo), se.getValues().get(0).toString());
+                if(isDate)
+                    pd = cb.lessThanOrEqualTo(p.<Date>get(nombreCampo), se.getValues().get(0));
+                else
+                    pd = cb.lessThanOrEqualTo(p.<String>get(nombreCampo), se.getValues().get(0).toString());
                 break;
             case UtilConstantes.CR_BETWEEN:
                 pd = cb.between(p.<Integer>get(nombreCampo), Integer.parseInt(se.getValues().get(0).toString()), Integer.parseInt(se.getValues().get(1).toString()));
@@ -399,6 +426,58 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
             return false;
         }
         return true;
+    }
+    
+    public List<DetDominio> obtenerValoresDominio(EncDominio dom) {
+        Query q = mp.doNativeQuery("select * from DET_DOMINIO where CODIGO_DOMINIO = ?1");
+        q.setParameter(1, dom.getCodigo());
+
+        List<Object[]> resultado = q.getResultList();
+        List<DetDominio> resp = new ArrayList();
+
+        for (Object[] o : resultado) {
+            Object a = o[0];
+
+            DetDominio dd = new DetDominio();
+            dd.setValor((String) o[0]);
+            dd.setDescripcion((String) o[1]);
+            dd.setEstado((String) o[2]);
+            dd.setCodigoDominio((String) o[3]);
+
+            resp.add(dd);
+        }
+        return resp;
+    }
+
+    public EncDominio obtenerEncDominioPorCodigo(String codigo) {
+        return mp.find(EncDominio.class, codigo);
+    }
+
+    public DetDominio obtenerDetDominioPorValor(String valor) {
+        Query q = mp.doNativeQuery("select * from DET_DOMINIO where CODIGO = ?1");
+        q.setParameter(1, valor);
+        Object[] o = (Object[]) q.getResultList().get(0);
+        return new DetDominio((String) o[0], (String) o[1], (String) o[2], (String) o[3]);
+    }
+
+    public List<DetDominio> obtenerTodosDominios() {
+        Query q = mp.doNativeQuery("select * from DET_DOMINIO");
+
+        List<Object[]> resultado = q.getResultList();
+        List<DetDominio> resp = new ArrayList();
+
+        for (Object[] o : resultado) {
+            Object a = o[0];
+
+            DetDominio dd = new DetDominio();
+            dd.setValor((String) o[0]);
+            dd.setDescripcion((String) o[1]);
+            dd.setEstado((String) o[2]);
+            dd.setCodigoDominio((String) o[3]);
+
+            resp.add(dd);
+        }
+        return resp;
     }
 
 }

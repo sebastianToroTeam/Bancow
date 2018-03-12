@@ -1,0 +1,8 @@
+bancow-ear/nb-configuration.xml
+bancow-ear/src/main/application/META-INF/weblogic-application.xml
+bancow-ejb/nb-configuration.xml
+bancow-ejb/src/main/resources/META-INF/weblogic-ejb-jar.xml
+bancow-web/nb-configuration.xml
+bancow-web/src/main/webapp/WEB-INF/weblogic.xml
+**/target/**/*
+desktop.ini

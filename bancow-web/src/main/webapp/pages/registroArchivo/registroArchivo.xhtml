@@ -1,216 +1,232 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	template="/templates/mainTemplate.xhtml">
-	<ui:param name="controlador" value="#{registroArchivoManagedBean}" />
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/mainTemplate.xhtml">
+    <ui:param name="controlador" value="#{registroArchivoManagedBean}" />
 
-	<ui:define name="content">
+    <ui:define name="content">
 
-		<div class="ui-g">
-			<div class="ui-g-12 ui-md-12 ui-g-nopad">
-				<div class="ui-g-12">
-					<h:form>
-						<!-- <p:growl id="growl" showDetail="true" />-->						
+        <div class="ui-g">
+            <div class="ui-g-12 ui-md-12 ui-g-nopad">
+                <div class="ui-g-12">
+                    <h:form>
+                        <!-- <p:growl id="growl" showDetail="true" />-->						
 
-						<div class="ui-g-12 ui-g-nopad">
-							<div class="ui-g">
-								<div class="ui-g-12 ui-md-12">
-									Lorem ipsum dolor sit amet,
-									consectetur adipiscing elit. Sed imperdiet, orci nec dictum
-									convallis, ligula mauris vestibulum turpis, nec varius tortor
-									quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus
-									quis vulputate. Pellentesque nec dui aliquam, lobortis est in,
-									lobortis ante
-								</div>
-								
-								<ui:include src="../filterTemplate.xhtml"/>
-								
-								<div class="ui-g-12 ui-md-12">
-									<p:dataTable id="ResultData" var="registroArchivo"
-										value="#{controlador.registroArchivoList}" reflow="true"
-										widgetVar="entidadTable"
-										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-										paginator="true" rows="10" style="margin-bottom:20px"
-										editable="true">
+                        <div class="ui-g-12 ui-g-nopad">
+                            <div class="ui-g">
+                                <div class="ui-g-12 ui-md-12">
+                                    <h:form>
+                                        <h:outputLabel value="Tipo: " for="selTipoProc"/>
+                                        <h:selectOneMenu id="selTipoProc" value="#{controlador.tipoProcesoSeleccionado}">
+                                            <p:ajax event="change" update="@this" />
+                                            <f:selectItem itemLabel="TODOS" itemValue="#{null}"/>
+                                            <f:selectItems value="#{controlador.tiposProceso}" var="elem" itemLabel="#{elem.descripcion}" itemValue="#{elem.valor}"/>
+                                        </h:selectOneMenu>
+                                        <br/>
+                                        <h:outputLabel value="ID: " for="filtroId"/>
+                                        <p:inputNumber id="filtroId" value="#{controlador.filtroId}"/>
 
-										<f:facet name="header">
-											<p:growl id="growl" showDetail="true" />
-											<p:commandButton value="Nuevo" icon="ui-icon-star"
-												actionListener="#{controlador.createRegistroArchivoWithForm}" action="registroArchivoForm">
-											</p:commandButton>
+                                        <br/>
+                                        <h:outputLabel value="FEHCA DESDE: " for="filtroFechaIni"/>
+                                        <p:calendar id="filtroFechaIni" value="#{controlador.filtroFechaIni}"/>
 
-										</f:facet>
+                                        <h:outputLabel value="FEHCA HASTA: " for="filtroFechaFin"/>
+                                        <p:calendar id="filtroFechaFin" value="#{controlador.filtroFechaFin}"/>
 
-										<f:facet name="{Exporters}">
+                                        <br/>
+                                        <p:commandButton value="Filtrar" actionListener="#{controlador.search()}"
+                                                         ajax="false" process="@parent"/>
+                                    </h:form>
+                                </div>
 
-											<h:commandLink>
-												<p:graphicImage name="images/csv.png" width="24" />
-												<p:dataExporter type="csv" target="ResultData"
-													fileName="registroArchivo" />
-											</h:commandLink>
+                                <ui:include src="../filterTemplate.xhtml"/>
 
-											<h:commandLink>
-												<p:graphicImage name="images/xml.png" width="24" />
-												<p:dataExporter type="xml" target="ResultData"
-													fileName="registroArchivo" />
-											</h:commandLink>
-										</f:facet>
-										
-										<p:growl id="msgs" showDetail="true"/>
-										
-										<p:ajax event="rowEdit" listener="#{controlador.onRowEdit}" update="msgs" />
-       									<p:ajax event="rowEditCancel" listener="#{controlador.onRowCancel}" update="msgs" />
+                                <div class="ui-g-12 ui-md-12">
+                                    <p:dataTable id="ResultData" var="registroArchivo"
+                                                 value="#{controlador.registroArchivoList}" reflow="true"
+                                                 widgetVar="entidadTable"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+                                                 paginator="true" rows="10" style="margin-bottom:20px"
+                                                 editable="true">
 
-										<p:column style="width:32px" exportable="false">
-											<p:rowEditor icon="ui-icon-star"/>
-										</p:column>
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="Numero" />
-											</f:facet>
-											
-											<h:outputText value="#{registroArchivo.registroArchivoPK.numero}" />
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="ArcProcCodigoProceso" />
-											</f:facet>
-											
-											<h:outputText value="#{registroArchivo.registroArchivoPK.arcProcCodigoProceso}" />
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="Registro" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.registro}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{registroArchivo.registro}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="Estado" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.estado}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{registroArchivo.estado}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="CuentaOrigen" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.cuentaOrigen}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{registroArchivo.cuentaOrigen}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="IdTitularOrigen" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.idTitularOrigen}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputNumber value="#{registroArchivo.idTitularOrigen}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="CuentaDestino" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.cuentaDestino}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{registroArchivo.cuentaDestino}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="IdTitularDestino" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.idTitularDestino}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputNumber value="#{registroArchivo.idTitularDestino}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
-										<p:column>
-											<f:facet name="header">
-												<h:outputText value="ValorTransferencia" />
-											</f:facet>
-											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{registroArchivo.valorTransferencia}" />
-												</f:facet>
-												<f:facet name="input">
-													<p:inputNumber value="#{registroArchivo.valorTransferencia}" style="width:100%" />
-												</f:facet>
-											</p:cellEditor>
-										</p:column>	
+                                        <f:facet name="header">
+                                            <p:growl id="growl" showDetail="true" />
+                                            <p:commandButton value="Nuevo" icon="ui-icon-star"
+                                                             actionListener="#{controlador.createRegistroArchivoWithForm}" action="registroArchivoForm">
+                                            </p:commandButton>
 
+                                        </f:facet>
 
+                                        <f:facet name="{Exporters}">
 
-										<p:column>
-											<f:facet name="header" exportable="false">
-												<h:outputText value="Options" />
-											</f:facet>
+                                            <h:commandLink>
+                                                <p:graphicImage name="images/csv.png" width="24" />
+                                                <p:dataExporter type="csv" target="ResultData"
+                                                                fileName="registroArchivo" />
+                                            </h:commandLink>
 
-											<p:growl id="message" showDetail="true" />
+                                            <h:commandLink>
+                                                <p:graphicImage name="images/xml.png" width="24" />
+                                                <p:dataExporter type="xml" target="ResultData"
+                                                                fileName="registroArchivo" />
+                                            </h:commandLink>
+                                        </f:facet>
 
-											<p:commandButton icon="fa fa-fw fa-trash-o"
-												actionListener="#{controlador.deleteRegistroArchivo(registroArchivo)}"
-												update="message, ResultData">
-												<p:confirm header="Confirmation" message="�Esta seguro?"
-													icon="ui-icon-alert" />
-											</p:commandButton>
+                                        <p:growl id="msgs" showDetail="true"/>
 
-											<p:confirmDialog global="true" showEffect="fade"
-												hideEffect="fade">
-												<p:commandButton value="Si" type="button"
-													styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-												<p:commandButton value="No" type="button"
-													styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-											</p:confirmDialog>
-										</p:column>
+                                        <p:ajax event="rowEdit" listener="#{controlador.onRowEdit}" update="msgs" />
+                                        <p:ajax event="rowEditCancel" listener="#{controlador.onRowCancel}" update="msgs" />
 
-									</p:dataTable>
-								</div>
-							</div>
-						</div>
+                                        <p:column style="width:32px" exportable="false">
+                                            <p:rowEditor icon="ui-icon-star"/>
+                                        </p:column>
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Numero" />
+                                            </f:facet>
+
+                                            <h:outputText value="#{registroArchivo.registroArchivoPK.numero}" />
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="ArcProcCodigoProceso" />
+                                            </f:facet>
+
+                                            <h:outputText value="#{registroArchivo.registroArchivoPK.arcProcCodigoProceso}" />
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Registro" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.registro}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{registroArchivo.registro}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="Estado" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.estado}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{registroArchivo.estado}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="CuentaOrigen" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.cuentaOrigen}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{registroArchivo.cuentaOrigen}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="IdTitularOrigen" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.idTitularOrigen}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputNumber value="#{registroArchivo.idTitularOrigen}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="CuentaDestino" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.cuentaDestino}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputText value="#{registroArchivo.cuentaDestino}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="IdTitularDestino" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.idTitularDestino}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputNumber value="#{registroArchivo.idTitularDestino}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="ValorTransferencia" />
+                                            </f:facet>
+                                            <p:cellEditor>
+                                                <f:facet name="output">
+                                                    <h:outputText value="#{registroArchivo.valorTransferencia}" />
+                                                </f:facet>
+                                                <f:facet name="input">
+                                                    <p:inputNumber value="#{registroArchivo.valorTransferencia}" style="width:100%" />
+                                                </f:facet>
+                                            </p:cellEditor>
+                                        </p:column>	
 
 
-					</h:form>
 
-				</div>
+                                        <p:column>
+                                            <f:facet name="header" exportable="false">
+                                                <h:outputText value="Options" />
+                                            </f:facet>
 
-			</div>
-		</div>
+                                            <p:growl id="message" showDetail="true" />
+
+                                            <p:commandButton icon="fa fa-fw fa-trash-o"
+                                                             actionListener="#{controlador.deleteRegistroArchivo(registroArchivo)}"
+                                                             update="message, ResultData">
+                                                <p:confirm header="Confirmation" message="�Esta seguro?"
+                                                           icon="ui-icon-alert" />
+                                            </p:commandButton>
+
+                                            <p:confirmDialog global="true" showEffect="fade"
+                                                             hideEffect="fade">
+                                                <p:commandButton value="Si" type="button"
+                                                                 styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                                <p:commandButton value="No" type="button"
+                                                                 styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                            </p:confirmDialog>
+                                        </p:column>
+
+                                    </p:dataTable>
+                                </div>
+                            </div>
+                        </div>
 
 
-	</ui:define>
+                    </h:form>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </ui:define>
 
 </ui:composition>
