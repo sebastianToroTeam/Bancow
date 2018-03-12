@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 
 import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.Convenio;
+import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import com.asesoftware.bancow.modelo.manejadores.ManejadorArchivoProcesado;
 import java.util.List;
 
@@ -55,6 +56,10 @@ public class NegocioArchivoProcesado extends NegocioAbstracto<ArchivoProcesado> 
     
     public boolean ValidarNombreArchivo(String nombreArchivo){
         return manejadorArchivoProcesado.ValidarNombreArchivo(nombreArchivo);
+    }
+    
+    public List<DetDominio> getTiposProceso(){
+        return manejadorArchivoProcesado.getTiposProceso();
     }
     // protected region Use esta region para su implementacion de otros metodos end
 

@@ -1,5 +1,6 @@
 package com.asesoftware.bancow.negocio;
 
+import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -12,6 +13,7 @@ import com.asesoftware.bancow.modelo.manejadores.ManejadorRegistroArchivo;
 
 
 import java.math.BigDecimal;
+import java.util.List;
 
 // protected region Incluya importaciones adicionales en esta seccion on begin
 
@@ -48,7 +50,9 @@ public class NegocioRegistroArchivo extends NegocioAbstracto<RegistroArchivo> {
 
     
     // protected region Use esta region para su implementacion de otros metodos on begin
-    
+    public List<DetDominio> getTiposProceso(){
+        return manejadorRegistroArchivo.getTiposProceso();
+    }
     
     // protected region Use esta region para su implementacion de otros metodos end
 

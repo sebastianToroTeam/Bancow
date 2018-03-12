@@ -1,9 +1,13 @@
 package com.asesoftware.bancow.modelo.manejadores;
 
+import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import com.asesoftware.bancow.modelo.manejadores.utils.ManejadorCrud;
 import com.asesoftware.bancow.modelo.entidades.EncDominio;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.persistence.Query;
 
 /**
  * Manejador que define las operaciones CRUD y de negocio a realizar sobre
@@ -21,6 +25,8 @@ public class ManejadorEncDominio extends ManejadorCrud<EncDominio,String>{
     
     // protected region Use esta region para su implementacion del manejador on begin 
     
-    // protected region Use esta region para su implementacion del manejador end        
+    // protected region Use esta region para su implementacion del manejador end    
+
+    
 }
 

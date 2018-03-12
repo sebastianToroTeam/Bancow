@@ -1,5 +1,7 @@
 package com.asesoftware.bancow.web.bean;
 
+import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
+import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +23,13 @@ import com.asesoftware.bancow.modelo.entidades.RegistroArchivo;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpression;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionCriteria;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionOrder;
+import com.asesoftware.bancow.modelo.utils.ServicioDetDominio;
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
 import com.asesoftware.bancow.negocio.NegocioRegistroArchivo;
 import com.asesoftware.bancow.web.aplicacion.FilterService;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
  
 @ManagedBean
@@ -50,6 +56,11 @@ public class RegistroArchivoManagedBean implements Serializable {
     private SearchExpression searchExpression;
     private List<SearchExpressionCriteria> searchExpressionList;
     private List<SearchExpressionOrder> searchOrderList;
+    
+    private String tipoProcesoSeleccionado;
+    private BigDecimal filtroId;
+    private Date filtroFechaIni;
+    private Date filtroFechaFin;
     
      
     @PostConstruct
@@ -269,6 +280,103 @@ public class RegistroArchivoManagedBean implements Serializable {
 	public void setRegistroArchivo(RegistroArchivo registroArchivo) {
 		this.registroArchivo = registroArchivo;
 	}
+        
+        public List<DetDominio> getTiposProceso() {
+        return negocioRegistroArchivo.getTiposProceso();
+    }
 
+    public String getTipoProcesoSeleccionado() {
+        return tipoProcesoSeleccionado;
+    }
+
+    public void setTipoProcesoSeleccionado(String tipoProcesoSeleccionado) {
+        this.tipoProcesoSeleccionado = tipoProcesoSeleccionado;
+    }
+
+    public BigDecimal getFiltroId() {
+        return filtroId;
+    }
+
+    public void setFiltroId(BigDecimal filtroId) {
+        this.filtroId = filtroId;
+    }
+
+    public Date getFiltroFechaIni() {
+        return filtroFechaIni;
+    }
+
+    public void setFiltroFechaIni(Date filtroFechaIni) {
+        this.filtroFechaIni = filtroFechaIni;
+    }
+
+    public Date getFiltroFechaFin() {
+        return filtroFechaFin;
+    }
+
+    public void setFiltroFechaFin(Date filtroFechaFin) {
+        this.filtroFechaFin = filtroFechaFin;
+    }
+
+    public void construirFiltros() {
+        searchExpressionList.clear();
+        if (tipoProcesoSeleccionado != null && !tipoProcesoSeleccionado.isEmpty()) {
+
+            SearchExpressionCriteria tipo = new SearchExpressionCriteria();
+            tipo.setCompound(UtilConstantes.CM_AND);
+            tipo.setField("arcProcCodigoProceso");
+            tipo.setMethod(UtilConstantes.CR_EQUAL);
+            List<String> values = new ArrayList<>();
+            values.add(tipoProcesoSeleccionado);
+            tipo.setValues(values);
+
+            searchExpressionList.add(tipo);
+        }
+
+        if (filtroId != null) {
+            SearchExpressionCriteria fid = new SearchExpressionCriteria();
+            fid.setCompound(UtilConstantes.CM_AND);
+            fid.setField("codigoProceso");
+            fid.setMethod(UtilConstantes.CR_EQUAL);
+            List<String> values = new ArrayList<>();
+            values.add(filtroId.toString());
+            fid.setValues(values);
+
+            searchExpressionList.add(fid);
+        }
+
+        if (filtroFechaIni != null) {
+            SearchExpressionCriteria ffini = new SearchExpressionCriteria();
+            ffini.setCompound(UtilConstantes.CM_AND);
+            ffini.setField("fechaEjecucion");
+            ffini.setMethod(UtilConstantes.CR_GREATER_EQUAL);
+            List<String> values = new ArrayList<>();
+            values.add(new SimpleDateFormat("yyyy-MM-dd").format(filtroFechaIni));
+            ffini.setValues(values);
+
+            searchExpressionList.add(ffini);
+        }
+
+        if (filtroFechaFin != null) {
+            SearchExpressionCriteria fffin = new SearchExpressionCriteria();
+            fffin.setCompound(UtilConstantes.CM_AND);
+            fffin.setField("fechaEjecucion");
+            fffin.setMethod(UtilConstantes.CR_LESS_EQUAL);
+            List<String> values = new ArrayList<>();
+            String fecha = new SimpleDateFormat("yyyy-MM-dd").format(filtroFechaFin) + " 23:59:59";
+            values.add(fecha);
+            fffin.setValues(values);
+
+            searchExpressionList.add(fffin);
+        }
+    }
+    
+    public void mostrarMensajes(ArchivoProcesado reg) {
+
+    }
+    
+    public String obtenerDescripcionPorValor(String valor){
+        DetDominio dd = ServicioDetDominio.obtenerDominioPorValor(valor);
+        return dd.getDescripcion();
+    }
    
 }
