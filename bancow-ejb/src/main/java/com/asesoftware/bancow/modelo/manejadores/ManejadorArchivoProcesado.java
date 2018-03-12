@@ -41,7 +41,7 @@ public class ManejadorArchivoProcesado extends ManejadorCrud<ArchivoProcesado, B
     public boolean ValidarNombreArchivo(String nombreArchivo) {
         boolean existe = false;
         try {
-            String sql = " SELECT COUNT(p) FROM ARCHIVO_PROCESADO  p   WHERE p.nombreArchivo ='" + nombreArchivo + "'";
+            String sql = " SELECT COUNT(p) FROM ARCHIVO_PROCESADO  p   WHERE p.nombreArchivo ='" + nombreArchivo + "' AND P.tipoProceso ='CA' AND P.estado='CV' ";
             Query q = super.mp.createQuery(sql);
             existe = (boolean) q.getSingleResult();
         } catch (Exception e) {

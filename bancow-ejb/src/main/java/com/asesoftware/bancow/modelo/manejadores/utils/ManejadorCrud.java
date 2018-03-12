@@ -1,5 +1,6 @@
 package com.asesoftware.bancow.modelo.manejadores.utils;
 
+import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import com.asesoftware.bancow.modelo.entidades.EncDominio;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.metamodel.SingularAttribute;
 
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.logging.Level;
@@ -304,6 +306,7 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
         if (sa.getType().getJavaType().isAnnotationPresent(Embeddable.class) && classHasField(c, nombreCampo)) {
             p = root.<Object>get(sa.getName());
         }
+
         
         boolean isDate = false;
         try {
@@ -411,6 +414,20 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
         }
     }
 
+    ///insertar datos de error validacion
+    public boolean registrarErrorValidacion(ErrorValidacion error) {
+
+        try {
+            String insert = "INSERT INTO BANCOW.ERROR_VALIDACION (DESCRIPCION, ARC_PROC_CODIGO_PROCESO, REG_ARC_NUMERO) VALUES ('%s', '%d', '%d') ";
+            String Query = String.format(insert, error.getDescripcion(), error.getCodigoProceso(), error.getNumeroRegistro());
+            Query q = (Query) mp.doNativeQuery(Query);
+            q.executeUpdate();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+    
     public List<DetDominio> obtenerValoresDominio(EncDominio dom) {
         Query q = mp.doNativeQuery("select * from DET_DOMINIO where CODIGO_DOMINIO = ?1");
         q.setParameter(1, dom.getCodigo());

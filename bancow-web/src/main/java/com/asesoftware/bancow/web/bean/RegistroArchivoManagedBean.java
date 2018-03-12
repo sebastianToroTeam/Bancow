@@ -14,7 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.inject.Inject;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;

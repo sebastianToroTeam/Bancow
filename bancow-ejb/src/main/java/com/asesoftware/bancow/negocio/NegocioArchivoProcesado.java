@@ -8,9 +8,11 @@ import org.apache.log4j.Logger;
 
 import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.Convenio;
+import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import com.asesoftware.bancow.modelo.manejadores.ManejadorArchivoProcesado;
 import java.util.List;
+import javax.persistence.Query;
 
 
 
@@ -56,6 +58,9 @@ public class NegocioArchivoProcesado extends NegocioAbstracto<ArchivoProcesado> 
     
     public boolean ValidarNombreArchivo(String nombreArchivo){
         return manejadorArchivoProcesado.ValidarNombreArchivo(nombreArchivo);
+    }
+    public boolean registrarErrorValidacion(ErrorValidacion error){
+        return this.mc.registrarErrorValidacion(error);    
     }
     
     public List<DetDominio> getTiposProceso(){
