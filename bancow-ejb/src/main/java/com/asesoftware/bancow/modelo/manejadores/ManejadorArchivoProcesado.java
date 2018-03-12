@@ -5,6 +5,8 @@ import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.Convenio;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
 import com.asesoftware.bancow.modelo.entidades.EncDominio;
+import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
+import com.asesoftware.bancow.modelo.entidades.RegistroArchivo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +56,26 @@ public class ManejadorArchivoProcesado extends ManejadorCrud<ArchivoProcesado, B
         EncDominio dominioTipoProceso = super.obtenerEncDominioPorCodigo(TIPO_PROCESO_DOMINIO);
         tiposProceso = obtenerValoresDominio(dominioTipoProceso);
         return tiposProceso;
+    }
+    
+    public List<ErrorValidacion> obtenerErrorValidacionPorRegistro(RegistroArchivo ra){
+        List<ErrorValidacion> resp = new ArrayList<>();
+        
+        Query q = mp.doNativeQuery("select * from ERROR_VALIDACION where ARC_PROC_CODIGO_PROCESO = ?1 AND REG_ARC_NUMERO = ?2");
+        q.setParameter(1, ra.getRegistroArchivoPK().getArcProcCodigoProceso());
+        q.setParameter(2, ra.getRegistroArchivoPK().getNumero());
+        
+        List<Object[]> objs = q.getResultList();
+        for(Object[] obj : objs){
+            ErrorValidacion ev = new ErrorValidacion();
+            ev.setCodigo((BigDecimal)obj[0]);
+            ev.setDescripcion((String)obj[1]);
+            ev.setCodigoProceso((BigDecimal)obj[2]);
+            ev.setNumeroRegistro((BigDecimal)obj[3]);
+            resp.add(ev);
+        }
+        
+        return resp;
     }
     // protected region Use esta region para su implementacion del manejador end        
 }

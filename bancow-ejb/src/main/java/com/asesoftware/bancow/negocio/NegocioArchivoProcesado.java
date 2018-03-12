@@ -10,6 +10,7 @@ import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.Convenio;
 import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
+import com.asesoftware.bancow.modelo.entidades.RegistroArchivo;
 import com.asesoftware.bancow.modelo.manejadores.ManejadorArchivoProcesado;
 import java.util.List;
 import javax.persistence.Query;
@@ -65,6 +66,10 @@ public class NegocioArchivoProcesado extends NegocioAbstracto<ArchivoProcesado> 
     
     public List<DetDominio> getTiposProceso(){
         return manejadorArchivoProcesado.getTiposProceso();
+    }
+    
+    public List<ErrorValidacion> obtenerErrorValidacionPorRegistro(RegistroArchivo ra){
+        return manejadorArchivoProcesado.obtenerErrorValidacionPorRegistro(ra);
     }
     // protected region Use esta region para su implementacion de otros metodos end
 

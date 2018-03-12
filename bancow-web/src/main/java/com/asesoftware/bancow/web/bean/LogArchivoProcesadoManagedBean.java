@@ -19,6 +19,7 @@ import org.primefaces.event.RowEditEvent;
 
 import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
+import com.asesoftware.bancow.modelo.entidades.ErrorValidacion;
 import com.asesoftware.bancow.modelo.entidades.RegistroArchivo;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpression;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionCriteria;
@@ -59,6 +60,8 @@ public class LogArchivoProcesadoManagedBean implements Serializable {
     private BigDecimal filtroId;
     private Date filtroFechaIni;
     private Date filtroFechaFin;
+    
+    private List<ErrorValidacion> erroresValidacion;
 
     @PostConstruct
     public void init() {
@@ -381,8 +384,8 @@ public class LogArchivoProcesadoManagedBean implements Serializable {
         searchOrderList.add(seo);
     }
     
-    public void mostrarMensajes(ArchivoProcesado reg) {
-
+    public void mostrarMensajes(RegistroArchivo reg) {
+        erroresValidacion = obtenerErrorValidacionPorRegistro(reg);
     }
     
     public String obtenerDescripcionPorValor(String valor){
@@ -396,7 +399,30 @@ public class LogArchivoProcesadoManagedBean implements Serializable {
             lista.addAll(ap.getRegArcProcesadoFkesList());
         } 
         return lista;
+    }
+    
+    public List<ErrorValidacion> obtenerErrorValidacionPorRegistro(RegistroArchivo ra){
+        return negocioArchivoProcesado.obtenerErrorValidacionPorRegistro(ra);
+    }
+    
+    public String obtenerMensajeError(List<ErrorValidacion> evs){
+        StringBuilder sb = new StringBuilder();
         
+        for(ErrorValidacion ev : evs)
+        {
+            sb.append(ev.getDescripcion()).append(System.getProperty("line.separator"));
+        }
+        
+        return sb.toString();
+    }
+    
+    public String erroresValidacionRegistro(RegistroArchivo ra){
+        List<ErrorValidacion> evs = obtenerErrorValidacionPorRegistro(ra);
+        return obtenerMensajeError(evs);
+    }
+    
+    public List<ErrorValidacion> getErroresValidacion(){
+        return erroresValidacion;
     }
 
 }

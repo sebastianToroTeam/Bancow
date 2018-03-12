@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import uk.co.jemos.podam.annotations.PodamExclude;
 import java.math.BigDecimal;
+import javax.persistence.Transient;
 
 /**
  * The persistent class for the CATEGORIES database table.
@@ -63,6 +64,8 @@ public class RegistroArchivo implements Serializable{
 	@Column(name="VALOR_TRANSFERENCIA")
 	private BigDecimal valorTransferencia;
 	
+        @Transient
+        List<ErrorValidacion> erroresValidacion;
 
 	@ManyToOne
 	@JoinColumn(name="ARC_PROC_CODIGO_PROCESO", referencedColumnName="CODIGO_PROCESO", insertable = false, updatable = false)
@@ -273,8 +276,17 @@ public class RegistroArchivo implements Serializable{
 	
 	// protected region metodos adicionales on begin
 	// Escriba en esta sección sus modificaciones
-
+    
+    
 	// protected region metodos adicionales end
+
+    public List<ErrorValidacion> getErroresValidacion() {
+        return erroresValidacion;
+    }
+
+    public void setErroresValidacion(List<ErrorValidacion> erroresValidacion) {
+        this.erroresValidacion = erroresValidacion;
+    }
 
 } 
 

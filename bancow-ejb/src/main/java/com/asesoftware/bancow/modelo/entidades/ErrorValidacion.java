@@ -16,16 +16,16 @@ public class ErrorValidacion  {
     private BigDecimal codigo;
     private String descripcion;
     private BigDecimal codigoProceso;
-    private Integer NumeroRegistro;
+    private BigDecimal NumeroRegistro;
 
     public ErrorValidacion() {
         codigo = BigDecimal.ZERO;
         descripcion = "";
         codigoProceso = BigDecimal.ZERO;
-        NumeroRegistro = 1;
+        NumeroRegistro = BigDecimal.ZERO;
     }
 
-    public ErrorValidacion(BigDecimal codigo, String descripcion, BigDecimal codigoProceso, Integer NumeroRegistro) {
+    public ErrorValidacion(BigDecimal codigo, String descripcion, BigDecimal codigoProceso, BigDecimal NumeroRegistro) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.codigoProceso = codigoProceso;
@@ -56,11 +56,11 @@ public class ErrorValidacion  {
         this.codigoProceso = codigoProceso;
     }
 
-    public Integer getNumeroRegistro() {
+    public BigDecimal getNumeroRegistro() {
         return NumeroRegistro;
     }
 
-    public void setNumeroRegistro(Integer NumeroRegistro) {
+    public void setNumeroRegistro(BigDecimal NumeroRegistro) {
         this.NumeroRegistro = NumeroRegistro;
     }
     
