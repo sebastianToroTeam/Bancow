@@ -576,7 +576,6 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             table1.addCell(" "); 
             
             
-            table1.addCell(" ");
             
            
             
