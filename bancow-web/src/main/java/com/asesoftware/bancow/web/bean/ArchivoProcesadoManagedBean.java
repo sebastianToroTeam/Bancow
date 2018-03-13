@@ -19,6 +19,7 @@ import org.primefaces.event.RowEditEvent;
 
 import com.asesoftware.bancow.modelo.entidades.ArchivoProcesado;
 import com.asesoftware.bancow.modelo.entidades.DetDominio;
+import com.asesoftware.bancow.modelo.entidades.RegistroArchivo;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpression;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionCriteria;
 import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionOrder;
@@ -26,6 +27,23 @@ import com.asesoftware.bancow.modelo.utils.ServicioDetDominio;
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
 import com.asesoftware.bancow.negocio.NegocioArchivoProcesado;
 import com.asesoftware.bancow.web.aplicacion.FilterService;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chapter;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,9 +60,19 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
     @EJB
     private NegocioArchivoProcesado negocioArchivoProcesado;
-
+    
+    
+    private static final Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA, 26, Font.BOLDITALIC);
+    private static final Font paragraphFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
+        
+    private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+    private static final Font subcategoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
+    private static final Font blueFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);    
+    private static final Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ArchivoProcesadoManagedBean.class.getName());
+    
+    private static final String iTextExampleImage = "C:\\tmp\\bancow-logo.png";
 
     private ArchivoProcesado archivoProcesado;
     private List<ArchivoProcesado> archivoProcesadoList;
@@ -58,6 +86,8 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private BigDecimal filtroId;
     private Date filtroFechaIni;
     private Date filtroFechaFin;
+    private List<RegistroArchivo> registroArchivos;
+    String file = "C:\\tmp\\GeneratePDFFileIText7.pdf";
 
     @PostConstruct
     public void init() {
@@ -380,5 +410,236 @@ public class ArchivoProcesadoManagedBean implements Serializable {
         DetDominio dd = ServicioDetDominio.obtenerDominioPorValor(valor);
         return dd.getDescripcion();
     }
+    
+    
+     public  void createField(BigDecimal codigoProceso){
+        System.out.println("Inicia com.asesoftware.bancow.web.bean.ReporteArchivo.createField()");        
+// Creamos el documento e indicamos el nombre del fichero.
+    Document document = new Document();
+        try {
+
+            try {
+
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+
+            } catch (FileNotFoundException fileNotFoundException) {
+                System.out.println("No such file was found to generate the PDF "
+                        + "(No se encontró el fichero para generar el pdf)" + fileNotFoundException);
+            }
+            document.open();
+            // We add metadata to PDF
+            // Añadimos los metadatos del PDF
+            document.addTitle("TRANSFERENCIAS MASIVAS ENTRE CUENTAS");
+            document.addSubject("TRANSFERENCIAS");
+            document.addKeywords("Banco w");
+            document.addAuthor("Asesoftware");
+            document.addCreator("Asesoftware");
+            
+            // First page
+            // Primera página 
+            //Chunk chunk = new Chunk("                                     TRANSFERENCIAS MASIVAS ENTRE CUENTAS", smallBold);
+            //chunk.setBackground(BaseColor.GRAY);
+            // Let's create de first Chapter (Creemos el primer capítulo)
+            Chapter chapter = new Chapter("", Paragraph.ALIGN_CENTER);
+           // chapter. = Element.ALIGN_CENTER;
+            //chapter.setNumberDepth(0);
+            float img = (float)22;
+            Paragraph parafo = new Paragraph("                TRANSFERENCIAS MASIVAS ENTRE CUENTAS", paragraphFont);
+            
+            // We add an image (Añadimos una imagen)
+            Image image;
+            try {
+                image = Image.getInstance(iTextExampleImage);  
+                //image.setAbsolutePosition(0,0);
+                image.setAlignment(image.LEFT | image.TEXTWRAP);
+                image.scalePercent(img);
+                //chapter.add(image);
+                document.add(image);
+                document.add(parafo);
+            } catch (BadElementException ex) {
+                System.out.println("Image BadElementException" +  ex);
+            } catch (IOException ex) {
+                System.out.println("Image IOException " +  ex);
+            }
+            Paragraph salto = new Paragraph(" ", paragraphFont);
+            Paragraph parafo2 = new Paragraph("Los resultados de las transferencias del archivo  ******  del convenio ***** son los siguientes:", paragraphFont);
+            Paragraph parafo3 =(new Paragraph("Registros erróneos en el archivo: ", paragraphFont));
+            parafo3.add(new Paragraph(" ", paragraphFont));
+            
+            document.add(salto);
+            document.add(parafo2);
+            document.add(salto);
+            document.add(parafo3);
+            document.add(salto);
+            
+            // Second page - some elements
+            // Segunda página - Algunos elementos
+           /* Chapter chapSecond = new Chapter(new Paragraph(new Anchor("Some elements (Añadimos varios elementos)")), 1);
+            Paragraph paragraphS = new Paragraph("Do it by Xules (Realizado por Xules)", subcategoryFont);
+            
+            // Underline a paragraph by iText (subrayando un párrafo por iText)
+            Paragraph paragraphE = new Paragraph("This line will be underlined with a dotted line (Está línea será subrayada con una línea de puntos).");
+            DottedLineSeparator dottedline = new DottedLineSeparator();
+            dottedline.setOffset(-2);
+            dottedline.setGap(2f);
+            paragraphE.add(dottedline);
+            chapSecond.addSection(paragraphE);
+            
+            Section paragraphMoreS = chapSecond.addSection(paragraphS);
+            // List by iText (listas por iText)
+            String text = "test 1 2 3 ";
+            for (int i = 0; i < 5; i++) {
+                text = text + text;
+            }
+            List list = new List(List.UNORDERED);
+            ListItem item = new ListItem(text);
+            item.setAlignment(Element.ALIGN_JUSTIFIED);
+            list.add(item);
+            text = "a b c align ";
+            for (int i = 0; i < 5; i++) {
+                text = text + text;
+            }
+            item = new ListItem(text);
+            item.setAlignment(Element.ALIGN_JUSTIFIED);
+            list.add(item);
+            text = "supercalifragilisticexpialidocious ";
+            for (int i = 0; i < 3; i++) {
+                text = text + text;
+            }
+            item = new ListItem(text);
+            item.setAlignment(Element.ALIGN_JUSTIFIED);
+            list.add(item);
+            paragraphMoreS.add(list);
+            document.add(chapSecond);
+            
+            // How to use PdfPTable
+            // Utilización de PdfPTable
+            
+            // We use various elements to add title and subtitle
+            // Usamos varios elementos para añadir título y subtítulo*/
+           /* Anchor anchor = new Anchor("Registros erróneos en el archivo:", paragraphFont);
+            //anchor.setName("Table export to PDF (Exportamos la tabla a PDF)");            
+            Chapter chapTitle = new Chapter(new Paragraph(anchor), 1);
+            Paragraph paragraph = new Paragraph("Do it by Xules (Realizado por Xules)", subcategoryFont);
+            Section paragraphMore = chapTitle.addSection(paragraph);
+            paragraphMore.add(new Paragraph("This is a simple example (Este es un ejemplo sencillo)"));*/
+            Integer numColumns = 1;
+            Integer numRows = 2;
+            // We create the table (Creamos la tabla).
+            PdfPTable table = new PdfPTable(numColumns); 
+            // Now we fill the PDF table 
+            // Ahora llenamos la tabla del PDF
+            PdfPCell columnHeader;
+            // Fill table rows (rellenamos las filas de la tabla).                
+            for (int column = 0; column < numColumns; column++) {
+                columnHeader = new PdfPCell(new Phrase("Error registrado "));
+                columnHeader.setHorizontalAlignment(Element.ALIGN_LEFT);
+                columnHeader.setBackgroundColor(new BaseColor(140, 194, 219));
+                table.addCell(columnHeader);
+            }
+            table.setHeaderRows(1);
+            // Fill table rows (rellenamos las filas de la tabla).                
+            for (int row = 0; row < numRows; row++) {
+                for (int column = 0; column < numColumns; column++) {
+                    table.addCell("El valor del campo 1 no es valido  " + row);
+                }
+            }
+            // We add the table (Añadimos la tabla)
+           // paragraphMore.add(table);
+            // We add the paragraph with the table (Añadimos el elemento con la tabla).
+            document.add(table);
+            
+            
+            
+            Paragraph parafo4 = new Paragraph("Transferencias exitosas", paragraphFont); 
+            parafo3.add(new Paragraph(" ", paragraphFont));
+            document.add(salto);
+            document.add(parafo4); 
+            document.add(salto);
+            
+            
+            Integer numCol2 = 7;
+            PdfPTable table1 = new PdfPTable(numCol2);  
+            PdfPCell columnHeaderOrigen;
+            columnHeaderOrigen = new PdfPCell(new Phrase("Origen"));
+            columnHeaderOrigen.setColspan(3);
+            columnHeaderOrigen.setHorizontalAlignment(Element.ALIGN_CENTER);
+            columnHeaderOrigen.setBackgroundColor(new BaseColor(140, 194, 219));            
+            table1.addCell(columnHeaderOrigen);            
+
+            PdfPCell columnHeaderDestino;
+            columnHeaderDestino = new PdfPCell(new Phrase("Destino"));
+            columnHeaderDestino.setHorizontalAlignment(Element.ALIGN_CENTER);
+            columnHeaderDestino.setBackgroundColor(new BaseColor(140, 194, 219));
+            columnHeaderDestino.setColspan(3);
+            table1.addCell(columnHeaderDestino);                     
+            table1.addCell(" "); 
+            
+            
+            table1.addCell(" ");
+            
+           
+            
+            
+            
+            
+            for (ArchivoProcesado archivProcesad : archivoProcesadoList) {                
+                if(archivProcesad.getCodigoProceso() == codigoProceso){                   
+                    registroArchivos = archivProcesad.getRegArcProcesadoFkesList();                    
+                    for (RegistroArchivo registroArchivo : registroArchivos) {
+                        System.out.println(registroArchivo.getCuentaDestino());
+                        table1.addCell(registroArchivo.getCuentaOrigen());
+                        table1.addCell(registroArchivo.getIdTitularOrigen().toString());
+                        table1.addCell("Adriana Martinez");
+                        table1.addCell(registroArchivo.getCuentaDestino());
+                        table1.addCell(registroArchivo.getIdTitularDestino().toString());
+                        table1.addCell("Jose Pinto");
+                        table1.addCell(registroArchivo.getValorTransferencia().toString());
+                    }                
+                }
+            }            
+            
+            document.add(table1);            
+            
+            
+            Paragraph parafo5 = new Paragraph("Transferencias No Exitosas", paragraphFont); 
+            parafo3.add(new Paragraph(" ", paragraphFont));
+            document.add(salto);
+            document.add(parafo5); 
+            document.add(salto);
+
+            
+            
+            
+
+            
+
+            
+            
+            
+            
+            
+            
+            
+            ///fin
+            document.close();
+            System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
+        } catch (DocumentException documentException) {
+            System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
+        }finally{
+         
+         document.close();
+         }
+      
+ 
+    
+    
+    
+    }
+    
+    
+    
+    
+    
 
 }
