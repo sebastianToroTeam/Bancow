@@ -27,6 +27,7 @@ import com.asesoftware.bancow.modelo.utils.ServicioDetDominio;
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
 import com.asesoftware.bancow.negocio.NegocioArchivoProcesado;
 import com.asesoftware.bancow.web.aplicacion.FilterService;
+import static com.itextpdf.text.Annotation.URL;
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Chapter;
@@ -45,8 +46,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.faces.context.ExternalContext;
+import javax.servlet.ServletContext;
 
 @ManagedBean
 @ViewScoped
@@ -72,7 +76,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ArchivoProcesadoManagedBean.class.getName());
     
-    private static final String iTextExampleImage = "C:\\tmp\\bancow-logo.png";
+    private static final String iTextExampleImage = "\\..\\resources\\images\\banco-wwb-logo.png";
 
     private ArchivoProcesado archivoProcesado;
     private List<ArchivoProcesado> archivoProcesadoList;
@@ -87,7 +91,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private Date filtroFechaIni;
     private Date filtroFechaFin;
     private List<RegistroArchivo> registroArchivos;
-    String file = "C:\\tmp\\GeneratePDFFileIText7.pdf";
+    String file = "GeneratePDFFileIText7.pdf";
 
     @PostConstruct
     public void init() {
@@ -416,40 +420,49 @@ public class ArchivoProcesadoManagedBean implements Serializable {
         System.out.println("Inicia com.asesoftware.bancow.web.bean.ReporteArchivo.createField()");        
 // Creamos el documento e indicamos el nombre del fichero.
     Document document = new Document();
+              
+            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+            String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
+            
+            String pathfile = servletContext.getRealPath("/");
+
         try {
 
             try {
 
-                PdfWriter.getInstance(document, new FileOutputStream(file));
+                PdfWriter.getInstance(document, new FileOutputStream(pathfile+"/resources/"+file));
 
             } catch (FileNotFoundException fileNotFoundException) {
                 System.out.println("No such file was found to generate the PDF "
                         + "(No se encontró el fichero para generar el pdf)" + fileNotFoundException);
             }
             document.open();
-            // We add metadata to PDF
-            // Añadimos los metadatos del PDF
+
             document.addTitle("TRANSFERENCIAS MASIVAS ENTRE CUENTAS");
             document.addSubject("TRANSFERENCIAS");
             document.addKeywords("Banco w");
             document.addAuthor("Asesoftware");
             document.addCreator("Asesoftware");
-            
-            // First page
-            // Primera página 
-            //Chunk chunk = new Chunk("                                     TRANSFERENCIAS MASIVAS ENTRE CUENTAS", smallBold);
-            //chunk.setBackground(BaseColor.GRAY);
-            // Let's create de first Chapter (Creemos el primer capítulo)
+
             Chapter chapter = new Chapter("", Paragraph.ALIGN_CENTER);
-           // chapter. = Element.ALIGN_CENTER;
-            //chapter.setNumberDepth(0);
             float img = (float)22;
             Paragraph parafo = new Paragraph("                TRANSFERENCIAS MASIVAS ENTRE CUENTAS", paragraphFont);
+
             
-            // We add an image (Añadimos una imagen)
             Image image;
+            
+            
+            
+            
+
+            
+       
+            
+            
+    
+
             try {
-                image = Image.getInstance(iTextExampleImage);  
+                image = Image.getInstance(path);  
                 //image.setAbsolutePosition(0,0);
                 image.setAlignment(image.LEFT | image.TEXTWRAP);
                 image.scalePercent(img);
@@ -472,57 +485,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             document.add(parafo3);
             document.add(salto);
             
-            // Second page - some elements
-            // Segunda página - Algunos elementos
-           /* Chapter chapSecond = new Chapter(new Paragraph(new Anchor("Some elements (Añadimos varios elementos)")), 1);
-            Paragraph paragraphS = new Paragraph("Do it by Xules (Realizado por Xules)", subcategoryFont);
-            
-            // Underline a paragraph by iText (subrayando un párrafo por iText)
-            Paragraph paragraphE = new Paragraph("This line will be underlined with a dotted line (Está línea será subrayada con una línea de puntos).");
-            DottedLineSeparator dottedline = new DottedLineSeparator();
-            dottedline.setOffset(-2);
-            dottedline.setGap(2f);
-            paragraphE.add(dottedline);
-            chapSecond.addSection(paragraphE);
-            
-            Section paragraphMoreS = chapSecond.addSection(paragraphS);
-            // List by iText (listas por iText)
-            String text = "test 1 2 3 ";
-            for (int i = 0; i < 5; i++) {
-                text = text + text;
-            }
-            List list = new List(List.UNORDERED);
-            ListItem item = new ListItem(text);
-            item.setAlignment(Element.ALIGN_JUSTIFIED);
-            list.add(item);
-            text = "a b c align ";
-            for (int i = 0; i < 5; i++) {
-                text = text + text;
-            }
-            item = new ListItem(text);
-            item.setAlignment(Element.ALIGN_JUSTIFIED);
-            list.add(item);
-            text = "supercalifragilisticexpialidocious ";
-            for (int i = 0; i < 3; i++) {
-                text = text + text;
-            }
-            item = new ListItem(text);
-            item.setAlignment(Element.ALIGN_JUSTIFIED);
-            list.add(item);
-            paragraphMoreS.add(list);
-            document.add(chapSecond);
-            
-            // How to use PdfPTable
-            // Utilización de PdfPTable
-            
-            // We use various elements to add title and subtitle
-            // Usamos varios elementos para añadir título y subtítulo*/
-           /* Anchor anchor = new Anchor("Registros erróneos en el archivo:", paragraphFont);
-            //anchor.setName("Table export to PDF (Exportamos la tabla a PDF)");            
-            Chapter chapTitle = new Chapter(new Paragraph(anchor), 1);
-            Paragraph paragraph = new Paragraph("Do it by Xules (Realizado por Xules)", subcategoryFont);
-            Section paragraphMore = chapTitle.addSection(paragraph);
-            paragraphMore.add(new Paragraph("This is a simple example (Este es un ejemplo sencillo)"));*/
+
             Integer numColumns = 1;
             Integer numRows = 2;
             // We create the table (Creamos la tabla).
@@ -544,9 +507,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
                     table.addCell("El valor del campo 1 no es valido  " + row);
                 }
             }
-            // We add the table (Añadimos la tabla)
-           // paragraphMore.add(table);
-            // We add the paragraph with the table (Añadimos el elemento con la tabla).
+
             document.add(table);
             
             
@@ -603,19 +564,13 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             document.add(salto);
 
             
+
             
+           
             
 
             
 
-            
-            
-            
-            
-            
-            
-            
-            ///fin
             document.close();
             System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
         } catch (DocumentException documentException) {
