@@ -56,8 +56,8 @@ public class NegocioArchivoProcesado extends NegocioAbstracto<ArchivoProcesado> 
            return manejadorArchivoProcesado.listaConvenios();
     }
     
-    public boolean ValidarNombreArchivo(String nombreArchivo){
-        return manejadorArchivoProcesado.ValidarNombreArchivo(nombreArchivo);
+    public boolean validarNombreArchivo(String nombreArchivo){
+        return manejadorArchivoProcesado.validarNombreArchivo(nombreArchivo);
     }
     public boolean registrarErrorValidacion(ErrorValidacion error){
         return this.mc.registrarErrorValidacion(error);    
