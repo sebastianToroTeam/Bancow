@@ -24,4 +24,10 @@ public interface Constantes {
     public static final String ERROR_NEG_1 = "Error en el %s del archivo, en la fila %d , tipo error %s, Error: %s ";
     public static final String ERROR_NEG_2 = "Error en el %s del archivo, en la fila %d , tipo error %s, Valor: %s ";
     
+    //ftp
+    public static final String SERVER = "192.168.3.27";
+    public static final String USER = "bancow";
+    public static final String PASSWORD = "b4nc0w2018*";
+    public static final String RUTA_SERVER =  "/home/bancow/cdump";
+    
 }

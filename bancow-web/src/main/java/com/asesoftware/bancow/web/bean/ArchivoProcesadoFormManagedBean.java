@@ -1,6 +1,7 @@
 package com.asesoftware.bancow.web.bean;
 
 import Utilidades.Constantes;
+import com.asesoftware.bancow.web.aplicacion.SubirFtp;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -52,14 +53,16 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     /**
      *
      */
-    public void createArchivoProcesado() {
+    public void createArchivoProcesado(){
+        respuesta = new ArrayList<>();
+        listaRespuesta = new ArrayList<>();
         try {
             //validar archivo
             //this.file = this.file.getInputstream();
             Date fecha = this.archivoProcesado.getFechaEjecucion();
             //validar si archivo ya fue cargado anteriormente
             String nombreArchivo = file.getFileName();
-            if (negocioArchivoProcesado.ValidarNombreArchivo(nombreArchivo)) {
+            if (negocioArchivoProcesado.validarNombreArchivo(nombreArchivo)) {
                 FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, nombreArchivo, " Ya fue cargado");
                 FacesContext.getCurrentInstance().addMessage(null, msg);
                 FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesado.xhtml");
@@ -94,11 +97,21 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
             //inicio archivo
             validarContenido();
             //Registrar el archivo
-            negocioArchivoProcesado.crear(archivoProcesado);
-            BigDecimal codigo=archivoProcesado.getCodigoProceso();
-            
+            boolean erroresProceso = false;
+            if(respuesta != null && !respuesta.isEmpty()){
+                erroresProceso = true;
+            }
+            archivoProcesado.setTipoProceso("CA");
+            archivoProcesado.setEstado(erroresProceso ? "AI":"CA");
+            archivoProcesado.setNombreArchivo(nombreArchivo);
+
+            negocioArchivoProcesado.crear(this.archivoProcesado);
+            //negocioArchivoProcesado.edit(archivoProcesado);
+
+            BigDecimal codigo = archivoProcesado.getCodigoProceso();
+
             //registar errores
-            if(!respuesta.isEmpty()){
+            if (erroresProceso) {
                 ErrorValidacion error = new ErrorValidacion();
                 for (String items : respuesta) {
                     error.setCodigoProceso(codigo);
@@ -106,8 +119,14 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
                     //error.setNumeroRegistro(1);
                     negocioArchivoProcesado.registrarErrorValidacion(error);
                 }
+            } else {
+                //registrar el archivo en el ftp
+                if(!SubirFtp.subirArchivoFtp(nombreArchivo,this.file.getInputstream())){
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser subir el archivo para procesar. por favor vuelva a enviar","");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                }                 
             }
-            FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesado.xhtml");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesadoForm.xhtml");
         } catch (IOException ex) {
             // TODO Auto-generated catch block
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser creado", "Corrija los datos");
@@ -129,9 +148,10 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     /*
      */
     // traer los Convenios activos
-     public boolean ValidarNombreArchivo(String nombreArchivo) {
-        return negocioArchivoProcesado.ValidarNombreArchivo(nombreArchivo);
+    public boolean validarNombreArchivo(String nombreArchivo) {
+        return negocioArchivoProcesado.validarNombreArchivo(nombreArchivo);
     }
+
     //*************************************************
     ////validar contenido archivo
     //paso 2
@@ -168,9 +188,9 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
                         if (!errorDato) {
                             this.archivoProcesado.setCantidadRegistros(new BigDecimal(fields[1]));
                             this.archivoProcesado.setValorTotal(new BigDecimal(fields[2]));
-                        }else{
-                              this.archivoProcesado.setCantidadRegistros(BigDecimal.ZERO);
-                              this.archivoProcesado.setValorTotal(BigDecimal.ZERO);
+                        } else {
+                            this.archivoProcesado.setCantidadRegistros(BigDecimal.ZERO);
+                            this.archivoProcesado.setValorTotal(BigDecimal.ZERO);
                         }
                     }
                     line = null;
@@ -229,6 +249,7 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
         }
     }
 
+    
     //********************************************************
     /**
      *
