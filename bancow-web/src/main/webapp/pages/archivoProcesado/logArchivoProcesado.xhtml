@@ -11,7 +11,7 @@
         <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-g-nopad">
                 <div class="ui-g-12">
-                    <h:form>
+                    
                         <!-- <p:growl id="growl" showDetail="true" />-->						
 
                         <div class="ui-g-12 ui-g-nopad">
@@ -34,7 +34,7 @@
 
                                         <h:outputLabel value="FEHCA HASTA: " for="filtroFechaFin"/>
                                         <p:calendar id="filtroFechaFin" value="#{controlador.filtroFechaFin}"/>
-                                        
+
                                         <br/>
                                         <p:commandButton value="Filtrar" actionListener="#{controlador.search()}"
                                                          ajax="false" process="@parent"/>
@@ -43,6 +43,7 @@
 
 
                                 <div class="ui-g-12 ui-md-12">
+                                    <h:form id="logRegistros">
                                     <p:dataTable id="ResultData" var="registroArchivo"
                                                  value="#{controlador.registroArchivos}" reflow="true"
                                                  widgetVar="entidadTable"
@@ -77,79 +78,79 @@
                                             <h:outputText value="#{registroArchivo.archivoProcesadoregArcProcesadoFk.codigoProceso}" />
 
                                         </p:column>		
-                                        
+
                                         <p:column>
                                             <f:facet name="header">
                                                 <h:outputText value="Origen" />
                                             </f:facet>
                                             <h:outputText value="#{controlador.obtenerDescripcionPorValor(registroArchivo.archivoProcesadoregArcProcesadoFk.tipoProceso)}" />
                                         </p:column>
-                                        
+
                                         <p:column exportable="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Mensaje"/>
                                             </f:facet>
-                                            <p:commandLink id="nonAjax" actionListener="#{controlador.mostrarMensajes(registroArchivo)}" >
+                                            <p:commandLink id="verDetalles" action="#{controlador.mostrarMensajes(registroArchivo)}" process="@this" ajax="false">
                                                 <h:outputText value="ver detalle mensaje" />
                                             </p:commandLink>
                                         </p:column>	
-                                        
+
                                         <p:column>
                                             <f:facet name="header">
                                                 <h:outputText value="Tipo Mensaje Log" />
                                             </f:facet>
                                             <h:outputText value="#{controlador.obtenerDescripcionPorValor(registroArchivo.estado)}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="No. registro" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.registroArchivoPK.numero}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Cuenta origen" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.cuentaOrigen}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="No. Id Origen" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.idTitularOrigen}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Cuenta Destino" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.cuentaDestino}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="No. Id destino" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.idTitularDestino}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Valor Transacción" />
                                             </f:facet>
                                             <h:outputText value="#{registroArchivo.valorTransferencia}" />
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Descripción del error" />
                                             </f:facet>
-                                            <h:outputText value="" />
+                                            <h:outputText value="#{controlador.erroresValidacionRegistro(registroArchivo)}" />
                                         </p:column>
-                                        
+
                                         <p:column>
                                             <f:facet name="header">
                                                 <h:outputText value="Fecha" />
@@ -158,7 +159,7 @@
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
                                         </p:column>
-                                        
+
                                         <p:column visible="false">
                                             <f:facet name="header">
                                                 <h:outputText value="Hora" />
@@ -167,16 +168,29 @@
                                                 <f:convertDateTime pattern="HH:mm" />
                                             </h:outputText>
                                         </p:column>
-                                        
-                                        
 
+
+
+                                    </p:dataTable>
+                                        </h:form>
+
+                                    <p:dataTable id="erroresLista" value="#{controlador.erroresValidacion}" var="ev"
+                                                 rendered="#{controlador.erroresValidacion ne null and controlador.erroresValidacion.size() gt 0}" widgetVar="erroresTable">
+                                        <p:column>
+                                            <f:facet name="header">
+                                                <h:outputText value="ERRORES"/>
+                                            </f:facet>
+                                            <h:outputText value="#{ev.descripcion}"/>
+                                        </p:column>
+                                        
                                     </p:dataTable>
                                 </div>
                             </div>
                         </div>
 
 
-                    </h:form>
+
+                    
 
                 </div>
 

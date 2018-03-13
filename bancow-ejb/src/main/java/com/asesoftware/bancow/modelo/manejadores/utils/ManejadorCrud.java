@@ -106,7 +106,7 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
     public void crear(T pData) {
         preGuardar();
         preCrear();
-        mp.create(pData);
+        mp.create(pData); 
         postCrear();
         postGuardar();
     }

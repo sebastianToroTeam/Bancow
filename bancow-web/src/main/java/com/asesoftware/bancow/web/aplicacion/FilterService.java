@@ -5,16 +5,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
 import javax.faces.model.SelectItem;
 import javax.faces.model.SelectItemGroup;
-import javax.persistence.FetchType;
-
-import com.asesoftware.bancow.modelo.manejadores.utils.SearchExpressionCriteria;
 import com.asesoftware.bancow.modelo.utils.UtilConstantes;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;

@@ -6,3 +6,4 @@ bancow-web/nb-configuration.xml
 bancow-web/src/main/webapp/WEB-INF/weblogic.xml
 **/target/**/*
 desktop.ini
+/bancow-web/target/
