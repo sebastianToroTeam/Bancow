@@ -134,16 +134,13 @@
                                         </p:column>	
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="TransferenciasExitosas" />
+                                                <h:outputText value="Generar reporte" />
                                             </f:facet>
-                                            <p:cellEditor>
-                                                <f:facet name="output">
-                                                    <h:outputText value="#{archivoProcesado.transferenciasExitosas}" />
-                                                </f:facet>
-                                                <f:facet name="input">
-                                                    <p:inputNumber value="#{archivoProcesado.transferenciasExitosas}" style="width:100%" />
-                                                </f:facet>
-                                            </p:cellEditor>
+                                            
+                                            
+                                        <p:commandButton value="Generar" actionListener="#{controlador.createField(archivoProcesado.codigoProceso)}" 
+                                                         ajax="false" process="@parent"/>                                            
+                                            
                                         </p:column>	
                                         <p:column>
                                             <f:facet name="header">
@@ -171,6 +168,8 @@
                                                 </f:facet>
                                             </p:cellEditor>
                                         </p:column>	
+                                        
+                                        
 
 
 
