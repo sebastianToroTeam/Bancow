@@ -573,12 +573,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             columnHeaderDestino.setBackgroundColor(new BaseColor(140, 194, 219));
             columnHeaderDestino.setColspan(3);
             table1.addCell(columnHeaderDestino);                     
-            table1.addCell(" "); 
-            
-            
-            
-           
-            
+            table1.addCell(" ");            
             
             
             
