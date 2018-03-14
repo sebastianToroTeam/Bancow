@@ -71,18 +71,17 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
     @EJB
     private NegocioArchivoProcesado negocioArchivoProcesado;
-    
-    
+
     private static final Font chapterFont = FontFactory.getFont(FontFactory.HELVETICA, 26, Font.BOLDITALIC);
     private static final Font paragraphFont = FontFactory.getFont(FontFactory.HELVETICA, 12, Font.NORMAL);
-        
+
     private static final Font categoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
     private static final Font subcategoryFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLD);
-    private static final Font blueFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);    
+    private static final Font blueFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL, BaseColor.RED);
     private static final Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD);
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ArchivoProcesadoManagedBean.class.getName());
-    
+
     private static final String iTextExampleImage = "\\..\\resources\\images\\banco-wwb-logo.png";
 
     private ArchivoProcesado archivoProcesado;
@@ -412,47 +411,40 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             searchExpressionList.add(fffin);
         }
     }
-    
+
     public void mostrarMensajes(ArchivoProcesado reg) {
 
     }
-    
-    public String obtenerDescripcionPorValor(String valor){
+
+    public String obtenerDescripcionPorValor(String valor) {
         DetDominio dd = ServicioDetDominio.obtenerDominioPorValor(valor);
         return dd.getDescripcion();
     }
-    
-    
-     public  void createField(BigDecimal codigoProceso){
-        System.out.println("Inicia com.asesoftware.bancow.web.bean.ReporteArchivo.createField()");        
-// Creamos el documento e indicamos el nombre del fichero.
-    Document document = new Document();
-    
-    
-    
 
+    public void createField(BigDecimal codigoProceso, String nombreArchivo, BigDecimal convenio) {
+        System.out.println("Inicia com.asesoftware.bancow.web.bean.ReporteArchivo.createField()");
+// Creamos el documento e indicamos el nombre del fichero.
+        Document document = new Document();
 
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        
-        String urlImage = request.getRequestURL().toString();
-        
 
-         
-         urlImage = urlImage.replaceFirst(request.getRequestURI(), "/bancow-web/resources/images/banco-wwb-logo.png");
-          System.out.println("url path: "+urlImage);
-              
-            ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-            String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
-            
-            String pathfile = servletContext.getRealPath("/");
+        String urlImage = request.getRequestURL().toString();
+
+        urlImage = urlImage.replaceFirst(request.getRequestURI(), "/bancow-web/resources/images/banco-wwb-logo.png");
+        System.out.println("url path: " + urlImage);
+
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
+
+        String pathfile = servletContext.getRealPath("/");
 
         try {
 
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
-                
-                file = file+format.format(new Date())+".pdf";
-                PdfWriter.getInstance(document, new FileOutputStream(pathfile+"/resources/"+file));
+
+                file = file + format.format(new Date()) + ".pdf";
+                PdfWriter.getInstance(document, new FileOutputStream(pathfile + "/resources/" + file));
 
             } catch (FileNotFoundException fileNotFoundException) {
                 System.out.println("No such file was found to generate the PDF "
@@ -467,40 +459,39 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             document.addCreator("Asesoftware");
 
             Chapter chapter = new Chapter("", Paragraph.ALIGN_CENTER);
-            float img = (float)22;
+            float img = (float) 22;
             Paragraph parafo = new Paragraph("                TRANSFERENCIAS MASIVAS ENTRE CUENTAS", paragraphFont);
 
-            
             Image image;
             try {
-                image = Image.getInstance(urlImage);  
+                image = Image.getInstance(urlImage);
                 //image.setAbsolutePosition(0,0);
                 image.setAlignment(image.LEFT | image.TEXTWRAP);
                 image.scalePercent(img);
                 //chapter.add(image);
                 document.add(image);
-                document.add(parafo);
+               //document.add(parafo);
             } catch (BadElementException ex) {
-                System.out.println("Image BadElementException" +  ex);
+                System.out.println("Image BadElementException" + ex);
             } catch (IOException ex) {
-                System.out.println("Image IOException " +  ex);
+                System.out.println("Image IOException " + ex);
             }
+            document.add(parafo);
             Paragraph salto = new Paragraph(" ", paragraphFont);
-            Paragraph parafo2 = new Paragraph("Los resultados de las transferencias del archivo  ******  del convenio ***** son los siguientes:", paragraphFont);
-            Paragraph parafo3 =(new Paragraph("Registros erróneos en el archivo: ", paragraphFont));
+            Paragraph parafo2 = new Paragraph("Los resultados de las transferencias del archivo " + nombreArchivo + " del convenio " + convenio + " son los siguientes:", paragraphFont);
+            Paragraph parafo3 = (new Paragraph("Registros erróneos en el archivo: ", paragraphFont));
             parafo3.add(new Paragraph(" ", paragraphFont));
-            
+
             document.add(salto);
             document.add(parafo2);
             document.add(salto);
             document.add(parafo3);
             document.add(salto);
-            
 
             Integer numColumns = 1;
             Integer numRows = 2;
             // We create the table (Creamos la tabla).
-            PdfPTable table = new PdfPTable(numColumns); 
+            PdfPTable table = new PdfPTable(numColumns);
             // Now we fill the PDF table 
             // Ahora llenamos la tabla del PDF
             PdfPCell columnHeader;
@@ -520,38 +511,33 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             }
 
             document.add(table);
-            
-            
-            
-            Paragraph parafo4 = new Paragraph("Transferencias exitosas", paragraphFont); 
+
+            Paragraph parafo4 = new Paragraph("Transferencias exitosas", paragraphFont);
             parafo3.add(new Paragraph(" ", paragraphFont));
             document.add(salto);
-            document.add(parafo4); 
+            document.add(parafo4);
             document.add(salto);
-            
-            
+
             Integer numCol2 = 7;
-            PdfPTable table1 = new PdfPTable(numCol2);  
+            PdfPTable table1 = new PdfPTable(numCol2);
             PdfPCell columnHeaderOrigen;
             columnHeaderOrigen = new PdfPCell(new Phrase("Origen"));
             columnHeaderOrigen.setColspan(3);
             columnHeaderOrigen.setHorizontalAlignment(Element.ALIGN_CENTER);
-            columnHeaderOrigen.setBackgroundColor(new BaseColor(140, 194, 219));            
-            table1.addCell(columnHeaderOrigen);            
+            columnHeaderOrigen.setBackgroundColor(new BaseColor(140, 194, 219));
+            table1.addCell(columnHeaderOrigen);
 
             PdfPCell columnHeaderDestino;
             columnHeaderDestino = new PdfPCell(new Phrase("Destino"));
             columnHeaderDestino.setHorizontalAlignment(Element.ALIGN_CENTER);
             columnHeaderDestino.setBackgroundColor(new BaseColor(140, 194, 219));
             columnHeaderDestino.setColspan(3);
-            table1.addCell(columnHeaderDestino);                     
-            table1.addCell(" ");            
-            
-            
-            
-            for (ArchivoProcesado archivProcesad : archivoProcesadoList) {                
-                if(archivProcesad.getCodigoProceso() == codigoProceso){                   
-                    registroArchivos = archivProcesad.getRegArcProcesadoFkesList();                    
+            table1.addCell(columnHeaderDestino);
+            table1.addCell(" ");
+
+            for (ArchivoProcesado archivProcesad : archivoProcesadoList) {
+                if (archivProcesad.getCodigoProceso() == codigoProceso) {
+                    registroArchivos = archivProcesad.getRegArcProcesadoFkesList();
                     for (RegistroArchivo registroArchivo : registroArchivos) {
                         System.out.println(registroArchivo.getCuentaDestino());
                         table1.addCell(registroArchivo.getCuentaOrigen());
@@ -561,44 +547,30 @@ public class ArchivoProcesadoManagedBean implements Serializable {
                         table1.addCell(registroArchivo.getIdTitularDestino().toString());
                         table1.addCell("Jose Pinto");
                         table1.addCell(registroArchivo.getValorTransferencia().toString());
-                    }                
+                    }
                 }
-            }            
-            
-            document.add(table1);            
-            
-            
-            Paragraph parafo5 = new Paragraph("Transferencias No Exitosas", paragraphFont); 
+            }
+
+            document.add(table1);
+
+            Paragraph parafo5 = new Paragraph("Transferencias No Exitosas", paragraphFont);
             parafo3.add(new Paragraph(" ", paragraphFont));
             document.add(salto);
-            document.add(parafo5); 
+            document.add(parafo5);
             document.add(salto);
-            
-            
+            document.close();
+            System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
 
-            
-
-
-            
-           
-            
-
-            
-
-        document.close();
-        System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
-
-            
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        ExternalContext externalContext = facesContext.getExternalContext();
-        HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();            
-        response.setContentType("application/pdf");
-            response.setHeader("Content-disposition","attachment;filename="+ "GeneratePDFFile.pdf");
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext externalContext = facesContext.getExternalContext();
+            HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+            response.setContentType("application/pdf");
+            response.setHeader("Content-disposition", "attachment;filename=" + file);
             try {
-                File f = new File(pathfile+"/resources/"+file);
+                File f = new File(pathfile + "/resources/" + file);
                 FileInputStream fis = new FileInputStream(f);
                 DataOutputStream os = new DataOutputStream(response.getOutputStream());
-                response.setHeader("Content-Length",String.valueOf(f.length()));
+                response.setHeader("Content-Length", String.valueOf(f.length()));
                 byte[] buffer = new byte[1024];
                 int len = 0;
                 while ((len = fis.read(buffer)) >= 0) {
@@ -606,29 +578,17 @@ public class ArchivoProcesadoManagedBean implements Serializable {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            }            
+            }
 
-            
-        facesContext.responseComplete();    
-            
-            
-            
+            facesContext.responseComplete();
+
         } catch (DocumentException documentException) {
             System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
-        }finally{
-         
-         document.close();
-         }
-      
- 
-    
-    
-    
+        } finally {
+
+            document.close();
+        }
+
     }
-    
-    
-    
-    
-    
 
 }

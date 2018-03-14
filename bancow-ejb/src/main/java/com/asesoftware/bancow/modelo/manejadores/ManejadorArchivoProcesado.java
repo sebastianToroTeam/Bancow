@@ -47,7 +47,7 @@ public class ManejadorArchivoProcesado extends ManejadorCrud<ArchivoProcesado, B
             Query q = super.mp.createQuery(sql);
             existe = (boolean) q.getSingleResult();
         } catch (Exception e) {
-
+            System.out.println("com.asesoftware.bancow.modelo.manejadores.ManejadorArchivoProcesado.validarNombreArchivo()" +e.toString());
         }
         return existe;
     }

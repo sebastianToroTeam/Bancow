@@ -90,13 +90,10 @@
                                         
                                         <p:column>
                                             <f:facet name="header">
-                                                <h:outputText value="Mensaje"/>
+                                                <h:outputText value="Nombre Archivo"/>
                                             </f:facet>
-                                            <p:commandLink id="nonAjax" actionListener="#{controlador.mostrarMensajes(archivoProcesado)}" >
-                                                <h:outputText value="ver detalle mensaje" />
-                                            </p:commandLink>
-                                        </p:column>
-                                        
+                                            <h:outputText value="#{archivoProcesado.nombreArchivo}" />
+                                        </p:column>                                        
                                         <p:column>
                                             <f:facet name="header">
                                                 <h:outputText value="FechaEjecucion" />
@@ -104,97 +101,17 @@
                                             <h:outputText value="#{archivoProcesado.fechaEjecucion}" >
                                                 <f:convertDateTime pattern="dd/MM/yyyy" />
                                             </h:outputText>
-                                        </p:column>	
-                                        
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="CantidadRegistros" />
-                                            </f:facet>
-                                            <p:cellEditor>
-                                                <f:facet name="output">
-                                                    <h:outputText value="#{archivoProcesado.cantidadRegistros}" />
-                                                </f:facet>
-                                                <f:facet name="input">
-                                                    <p:inputNumber value="#{archivoProcesado.cantidadRegistros}" style="width:100%" />
-                                                </f:facet>
-                                            </p:cellEditor>
-                                        </p:column>	
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="ValorTotal" />
-                                            </f:facet>
-                                            <p:cellEditor>
-                                                <f:facet name="output">
-                                                    <h:outputText value="#{archivoProcesado.valorTotal}" />
-                                                </f:facet>
-                                                <f:facet name="input">
-                                                    <p:inputNumber value="#{archivoProcesado.valorTotal}" style="width:100%" />
-                                                </f:facet>
-                                            </p:cellEditor>
-                                        </p:column>	
+                                        </p:column>
+                                        	
                                         <p:column>
                                             <f:facet name="header">
                                                 <h:outputText value="Generar reporte" />
                                             </f:facet>                                           
                                             
-                                        <p:commandButton value="Generar" actionListener="#{controlador.createField(archivoProcesado.codigoProceso)}" 
+                                            <p:commandButton value="Generar" actionListener="#{controlador.createField(archivoProcesado.codigoProceso,archivoProcesado.nombreArchivo,archivoProcesado.convenioCodigo)}" 
                                                          ajax="false" process="@parent"/>                                            
                                             
-                                        </p:column>	
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="TransferenciasFallidas" />
-                                            </f:facet>
-                                            <p:cellEditor>
-                                                <f:facet name="output">
-                                                    <h:outputText value="#{archivoProcesado.transferenciasFallidas}" />
-                                                </f:facet>
-                                                <f:facet name="input">
-                                                    <p:inputNumber value="#{archivoProcesado.transferenciasFallidas}" style="width:100%" />
-                                                </f:facet>
-                                            </p:cellEditor>
-                                        </p:column>	
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="ConvenioCodigo" />
-                                            </f:facet>
-                                            <p:cellEditor>
-                                                <f:facet name="output">
-                                                    <h:outputText value="#{archivoProcesado.convenioCodigo}" />
-                                                </f:facet>
-                                                <f:facet name="input">
-                                                    <p:inputText value="#{archivoProcesado.convenioCodigo}" style="width:100%" />
-                                                </f:facet>
-                                            </p:cellEditor>
-                                        </p:column>	
-                                        
-                                        
-
-
-
-                                        <p:column>
-                                            <f:facet name="header" exportable="false">
-                                                <h:outputText value="Options" />
-                                            </f:facet>
-
-                                            <p:growl id="message" showDetail="true" />
-
-                                            <p:commandButton icon="fa fa-fw fa-trash-o"
-                                                             actionListener="#{controlador.deleteArchivoProcesado(archivoProcesado)}"
-                                                             update="message, ResultData">
-                                                <p:confirm header="Confirmation" message="�Esta seguro?"
-                                                           icon="ui-icon-alert" />
-                                            </p:commandButton>
-
-                                            <p:confirmDialog global="true" showEffect="fade"
-                                                             hideEffect="fade">
-                                                <p:commandButton value="Si" type="button"
-                                                                 styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                                                <p:commandButton value="No" type="button"
-                                                                 styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                                            </p:confirmDialog>
                                         </p:column>
-
                                     </p:dataTable>
                                 </div>
                             </div>
