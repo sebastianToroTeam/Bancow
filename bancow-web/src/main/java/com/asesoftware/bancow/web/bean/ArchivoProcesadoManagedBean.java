@@ -42,6 +42,10 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -49,8 +53,11 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
 import javax.faces.context.ExternalContext;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @ManagedBean
 @ViewScoped
@@ -420,6 +427,16 @@ public class ArchivoProcesadoManagedBean implements Serializable {
         System.out.println("Inicia com.asesoftware.bancow.web.bean.ReporteArchivo.createField()");        
 // Creamos el documento e indicamos el nombre del fichero.
     Document document = new Document();
+    
+    
+    
+
+
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        
+        
+         System.out.println("url path: "+request.getRequestURL());
+    
               
             ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
             String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
@@ -562,8 +579,11 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             document.add(salto);
             document.add(parafo5); 
             document.add(salto);
+            
+            
 
             
+
 
             
            
@@ -571,8 +591,34 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
             
 
-            document.close();
-            System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
+        document.close();
+        System.out.println("Your PDF file has been generated!(¡Se ha generado tu hoja PDF!");
+
+            
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        ExternalContext externalContext = facesContext.getExternalContext();
+        HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();            
+        response.setContentType("application/pdf");
+            response.setHeader("Content-disposition","attachment;filename="+ "testPDF.pdf");
+            try {
+                File f = new File(pathfile+"/resources/"+file);
+                FileInputStream fis = new FileInputStream(f);
+                DataOutputStream os = new DataOutputStream(response.getOutputStream());
+                response.setHeader("Content-Length",String.valueOf(f.length()));
+                byte[] buffer = new byte[1024];
+                int len = 0;
+                while ((len = fis.read(buffer)) >= 0) {
+                    os.write(buffer, 0, len);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }            
+
+            
+            
+            
+            
+            
         } catch (DocumentException documentException) {
             System.out.println("The file not exists (Se ha producido un error al generar un documento): " + documentException);
         }finally{
