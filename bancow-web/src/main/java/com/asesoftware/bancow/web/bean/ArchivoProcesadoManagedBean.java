@@ -91,7 +91,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private Date filtroFechaIni;
     private Date filtroFechaFin;
     private List<RegistroArchivo> registroArchivos;
-    String file = "GeneratePDFFileIText7.pdf";
+    String file = "Reporte_";
 
     @PostConstruct
     public void init() {
@@ -429,7 +429,9 @@ public class ArchivoProcesadoManagedBean implements Serializable {
         try {
 
             try {
-
+                SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
+                
+                file = file+format.format(new Date())+".pdf";
                 PdfWriter.getInstance(document, new FileOutputStream(pathfile+"/resources/"+file));
 
             } catch (FileNotFoundException fileNotFoundException) {
@@ -450,17 +452,6 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
             
             Image image;
-            
-            
-            
-            
-
-            
-       
-            
-            
-    
-
             try {
                 image = Image.getInstance(path);  
                 //image.setAbsolutePosition(0,0);
