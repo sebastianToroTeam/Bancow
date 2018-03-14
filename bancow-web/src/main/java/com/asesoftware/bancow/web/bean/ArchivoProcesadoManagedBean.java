@@ -98,7 +98,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private Date filtroFechaIni;
     private Date filtroFechaFin;
     private List<RegistroArchivo> registroArchivos;
-    String file = "GeneratePDFFileIText7.pdf";
+    String file = "GeneratePDFFile.pdf";
 
     @PostConstruct
     public void init() {
@@ -434,9 +434,12 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         
+        String urlImage = request.getRequestURL().toString();
         
-         System.out.println("url path: "+request.getRequestURL());
-    
+
+         
+         urlImage = urlImage.replaceFirst(request.getRequestURI(), "/bancow-web/resources/images/banco-wwb-logo.png");
+          System.out.println("url path: "+urlImage);
               
             ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
             String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
@@ -479,7 +482,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     
 
             try {
-                image = Image.getInstance(path);  
+                image = Image.getInstance(urlImage);  
                 //image.setAbsolutePosition(0,0);
                 image.setAlignment(image.LEFT | image.TEXTWRAP);
                 image.scalePercent(img);
@@ -599,7 +602,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
         ExternalContext externalContext = facesContext.getExternalContext();
         HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();            
         response.setContentType("application/pdf");
-            response.setHeader("Content-disposition","attachment;filename="+ "testPDF.pdf");
+            response.setHeader("Content-disposition","attachment;filename="+ "GeneratePDFFile.pdf");
             try {
                 File f = new File(pathfile+"/resources/"+file);
                 FileInputStream fis = new FileInputStream(f);
@@ -615,7 +618,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             }            
 
             
-            
+        facesContext.responseComplete();    
             
             
             
