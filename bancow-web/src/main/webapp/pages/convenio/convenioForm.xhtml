@@ -38,8 +38,11 @@
 											<p:message for="convenio_descripcion" />
 											<h:outputText value="#{controlador.convenio.descripcion}" />
 											<h:outputLabel for="convenio_estado" value="Estado:" />
-											<p:inputText id="convenio_estado"
-												value="#{controlador.convenio.estado}" label="Estado" />
+											<p:selectOneMenu id="convenio_estado"  value="#{controlador.convenio.estado}" required="true" label="Estado">
+                                                                                           <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                           <f:selectItem itemLabel="Activo" itemValue="A" />
+                                                                                           <f:selectItem itemLabel="Inactivo" itemValue="I" />
+                                                                                        </p:selectOneMenu>
 											<p:message for="convenio_estado" />
 											<h:outputText value="#{controlador.convenio.estado}" />
 											<h:outputLabel for="convenio_rutaCargaArchivos" value="RutaCargaArchivos:" />
