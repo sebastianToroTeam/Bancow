@@ -68,7 +68,15 @@ public class NegocioArchivoProcesado extends NegocioAbstracto<ArchivoProcesado> 
     }
      public List<ErrorValidacion> obtenerErrorValidacionPorRegistro(RegistroArchivo ra){
         return manejadorArchivoProcesado.obtenerErrorValidacionPorRegistro(ra);
+    }     
+     
+     @Override
+     public ArchivoProcesado crear(ArchivoProcesado obj) {
+        // protected region Modifique el metodo crear on begin
+
+        logService(this.getClass().getName(), "crear", obj);
+        manejadorArchivoProcesado.crear(obj);
+        return obj;
     }
     // protected region Use esta region para su implementacion de otros metodos end
-
-}
+ }

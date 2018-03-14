@@ -22,6 +22,7 @@ import java.util.Date;
 import uk.co.jemos.podam.annotations.PodamExclude;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import javax.persistence.SequenceGenerator;
 
 /**
  * The persistent class for the CATEGORIES database table.
@@ -48,8 +49,10 @@ public class ArchivoProcesado implements Serializable{
     private static final String[] ATRIBUTOS_ENTIDAD_ARCHIVO_PROCESADO
             = {ENTIDAD_ARCHIVO_PROCESADO_ESTADO, ENTIDAD_ARCHIVO_PROCESADO_TRANSFERENCIAS_FALLIDAS, ENTIDAD_ARCHIVO_PROCESADO_FECHA_EJECUCION, ENTIDAD_ARCHIVO_PROCESADO_TIPO_PROCESO, ENTIDAD_ARCHIVO_PROCESADO_VALOR_TOTAL, ENTIDAD_ARCHIVO_PROCESADO_CANTIDAD_REGISTROS, ENTIDAD_ARCHIVO_PROCESADO_TRANSFERENCIAS_EXITOSAS, ENTIDAD_ARCHIVO_PROCESADO_CONVENIO_CODIGO, ENTIDAD_ARCHIVO_PROCESADO_PK, ENTIDAD_ARCHIVO_PROCESADO_NOMBRE_ARCHIVO};
 
-	@Id
-    @Column(name="CODIGO_PROCESO")
+	@Id        
+        @GeneratedValue(generator="InvSeq") 
+        @SequenceGenerator(name="InvSeq",sequenceName="SEQC_ARCHIVO_PROCESADO", allocationSize=1)
+        @Column(name="CODIGO_PROCESO")
 	private BigDecimal codigoProceso;
 
 	@Column(name="TIPO_PROCESO")

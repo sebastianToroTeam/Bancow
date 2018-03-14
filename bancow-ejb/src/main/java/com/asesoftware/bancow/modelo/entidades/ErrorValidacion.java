@@ -22,7 +22,7 @@ public class ErrorValidacion  {
         codigo = BigDecimal.ZERO;
         descripcion = "";
         codigoProceso = BigDecimal.ZERO;
-        NumeroRegistro = BigDecimal.ZERO;
+        NumeroRegistro = BigDecimal.ONE;
     }
 
     public ErrorValidacion(BigDecimal codigo, String descripcion, BigDecimal codigoProceso, BigDecimal NumeroRegistro) {

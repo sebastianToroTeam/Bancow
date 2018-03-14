@@ -1,4 +1,4 @@
-package  com.asesoftware.bancow.modelo.manejadores.utils;
+package com.asesoftware.bancow.modelo.manejadores.utils;
 
 import static com.asesoftware.bancow.modelo.utils.UtilReflection.consultarAtributoId;
 import static com.asesoftware.bancow.modelo.utils.UtilReflection.consultarAtributoPKCompleja;
@@ -34,10 +34,10 @@ public class ManejadorPersistencia<T> implements Serializable {
     // Atributos
     @PersistenceContext
     private transient EntityManager em;
-    
+
     /**
-    * Variable estatica para imprimir logs...
-    */
+     * Variable estatica para imprimir logs...
+     */
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(ManejadorPersistencia.class.getName());
 
     /**
@@ -49,62 +49,70 @@ public class ManejadorPersistencia<T> implements Serializable {
         em.persist(obj);
     }
 
+    public void createFlush(Object obj) {
+        em.persist(obj);
+        em.flush();
+    }
+
     /**
      * Elimina un objeto de la obase de datos identificado por idObj.
      *
      * @param claseEntidad Clase de la entidad T
-     * @param idObj  Puede ser una instancia de una pk compuesto de una entidad o un id simple (Ej. Integer, String, Long, etc)
+     * @param idObj Puede ser una instancia de una pk compuesto de una entidad o
+     * un id simple (Ej. Integer, String, Long, etc)
      */
     public void delete(Class claseEntidad, Object idObj) {
-                             
-        Query q = construirQueryEliminacion(claseEntidad, idObj);    
+
+        Query q = construirQueryEliminacion(claseEntidad, idObj);
         q.executeUpdate();
-        
+
     }
-    
+
     /**
      * Devuelve un query delete del objeto identificado por idObj
+     *
      * @param claseEntidad Clase de la entidad T
-     * @param idObj : Puede ser una instancia de una pk compuesto de una entidad o un id simple (Ej. Integer, String, Long, etc)
+     * @param idObj : Puede ser una instancia de una pk compuesto de una entidad
+     * o un id simple (Ej. Integer, String, Long, etc)
      * @return Query
      */
-    public Query construirQueryEliminacion(Class claseEntidad, Object idObj){
-        
+    public Query construirQueryEliminacion(Class claseEntidad, Object idObj) {
+
         //Construcción de la condición
         StringBuilder sql = new StringBuilder();
         sql.append("DELETE FROM " + claseEntidad.getSimpleName());
         sql.append(" p WHERE");
-        if(esPkCompleja(idObj)){
+        if (esPkCompleja(idObj)) {
             List<String> atributosId = consultarAtributosClase(idObj.getClass());
             String atributoPKEntity = consultarAtributoPKCompleja(claseEntidad);
-            for(int i = 0; i<atributosId.size(); i++){
+            for (int i = 0; i < atributosId.size(); i++) {
                 String referenciaAtributo = atributoPKEntity + "." + atributosId.get(i);
-                if(i>0){
+                if (i > 0) {
                     sql.append(" AND");
                 }
                 sql.append(" p." + referenciaAtributo + " = :" + atributosId.get(i));
             }
-        }else{
+        } else {
             String atributo = consultarAtributoId(claseEntidad);
             sql.append(" p." + atributo + " = :" + atributo);
-        }                        
-                       
+        }
+
         Query q = em.createQuery(sql.toString());
-        if(esPkCompleja(idObj)){
+        if (esPkCompleja(idObj)) {
             List<String> atributosId = consultarAtributosClase(idObj.getClass());
-            for(String atributo : atributosId){
+            for (String atributo : atributosId) {
                 try {
                     q.setParameter(atributo, consultarMetodoGetAtributo(idObj, atributo).invoke(idObj));
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                     Logger.getLogger(ManejadorPersistencia.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }else{
+        } else {
             q.setParameter(consultarAtributoId(claseEntidad), idObj);
         }
-        
+
         return q;
-    }    
+    }
 
     /**
      * Elimina los objetos en cascada deacuerdo a su mapeo
@@ -151,10 +159,11 @@ public class ManejadorPersistencia<T> implements Serializable {
 
     /**
      * Busca un objeto en la base de datos.
+     *
      * @param <T> Identificador de la clase de una entidad
      * @param cl Clase de la entidad T
      * @param pk Llave primaria de la instancia de la entidad T a buscar
-     * @return El objeto de la clase T identificado con el pk especificado 
+     * @return El objeto de la clase T identificado con el pk especificado
      */
     public <T> T find(Class<T> cl, Object pk) {
         return em.find(cl, pk);
@@ -164,7 +173,8 @@ public class ManejadorPersistencia<T> implements Serializable {
      * Obtiene una lista con todos los resultados de una entidad.
      *
      * @param obj Instancia de una entidad (No importan los valores)
-     * @return List Lista de todas las instancias encontradas para la entidad del objeto obj
+     * @return List Lista de todas las instancias encontradas para la entidad
+     * del objeto obj
      */
     public List listData(Object obj) {
         return em.createNamedQuery(obj.getClass().getSimpleName() + ".findAll").getResultList();
@@ -174,7 +184,8 @@ public class ManejadorPersistencia<T> implements Serializable {
      * Obtiene una lista con todos los resultados de una entidad.
      *
      * @param clazz Clase de la entidad a consultar
-     * @return List Lista de todas las instancias encontradas para la entidad de la clase clazz
+     * @return List Lista de todas las instancias encontradas para la entidad de
+     * la clase clazz
      */
     public List<T> listData(Class clazz) {
         return em.createNamedQuery(clazz.getSimpleName() + ".findAll").getResultList();
@@ -186,7 +197,7 @@ public class ManejadorPersistencia<T> implements Serializable {
      * @param q Query jpql a ejecutar
      * @return List Lista con los resultados de la ejecución del query
      */
-    public List listData(Query q) {    	
+    public List listData(Query q) {
         return q.getResultList();
     }
 
@@ -212,6 +223,7 @@ public class ManejadorPersistencia<T> implements Serializable {
 
     /**
      * Obtiene un referencia a una instancia de la clase dada
+     *
      * @param <R> Identificador de una clase
      * @param clazz Clase de la cual se quiere obtener la referencia
      * @param id Identificar del objeto del cual se quiere obtener la referencia
@@ -222,9 +234,11 @@ public class ManejadorPersistencia<T> implements Serializable {
     }
 
     /**
-     * Ejecuta el conteo de todos los registros de la tabla corrspondiente a la clase c
-     * 
-     * @param c La clase de la entidad sobre la cual se va a realizar la consulta
+     * Ejecuta el conteo de todos los registros de la tabla corrspondiente a la
+     * clase c
+     *
+     * @param c La clase de la entidad sobre la cual se va a realizar la
+     * consulta
      * @return El número de registro en la tabla de la entidad c
      */
     public int getCount(Class c) {
@@ -247,57 +261,60 @@ public class ManejadorPersistencia<T> implements Serializable {
             logger.error(ex);
         }
         return resultado;
-    }   
+    }
 
     /**
      * Ejecuta el query nativo sel que se pasa como parámetro
+     *
      * @param querystr Query nativo en formato sql
      * @return La lista con los resultados de la ejecución del query
      */
     public Query doNativeQuery(String querystr) {
 
         logger.debug("NATIVE QRY> " + querystr);
-        
+
         return em.createNativeQuery(querystr);
 
     }
-    
+
     /**
      * Obtiene un único objeto resultado de la ejecución del query
-     * 
+     *
      * @param q Query jpql a ejecutar
-     * @return El resultado de la consulta 
+     * @return El resultado de la consulta
      */
     public Object getData(Query q) {
-    	Object objeto;
-    	try{
+        Object objeto;
+        try {
             objeto = q.getSingleResult();
-    	}catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error(e);
             objeto = null;
-    	}
-    	
+        }
+
         return objeto;
     }
-    
+
     /**
-     * 
+     *
      */
     public CriteriaBuilder getCriteriaBuilder() {
-    	return em.getCriteriaBuilder();
+        return em.getCriteriaBuilder();
     }
+
     /**
-     * 
+     *
      */
-    public TypedQuery<T>  getTypedQuery(CriteriaQuery<T> cq) {
-    	TypedQuery<T> tq = em.createQuery(cq);
-    	return tq;
+    public TypedQuery<T> getTypedQuery(CriteriaQuery<T> cq) {
+        TypedQuery<T> tq = em.createQuery(cq);
+        return tq;
     }
+
     /**
-     * 
+     *
      */
     public Metamodel getMetamodel() {
-    	return em.getMetamodel();
+        return em.getMetamodel();
     }
 
 }

@@ -103,35 +103,32 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
                     if (respuesta != null && !respuesta.isEmpty()) {
                         erroresProceso = true;
                     }
-                    archivoProcesado.setTipoProceso("CA");
-                    archivoProcesado.setEstado(erroresProceso ? "AI" : "CA");
-                    archivoProcesado.setNombreArchivo(nombreArchivo);
-
-                    negocioArchivoProcesado.crear(this.archivoProcesado);
-                    //negocioArchivoProcesado.;
-
-                    BigDecimal codigo = archivoProcesado.getCodigoProceso();
-
-                    //registar errores
-                    if (erroresProceso) {
-                        ErrorValidacion error = new ErrorValidacion();
-                        for (String items : respuesta) {
-                            error.setCodigoProceso(codigo);
-                            error.setDescripcion(items);
-                            //error.setNumeroRegistro(1);
-                            negocioArchivoProcesado.registrarErrorValidacion(error);
-                        }
-                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "El Archivo tiene errores por favor validar ", "");
-                        FacesContext.getCurrentInstance().addMessage(null, msg);
-                        return;
-                    } else {
-                        //registrar el archivo en el ftp
+                    if(!erroresProceso){
                         if (!SubirFtp.subirArchivoFtp(nombreArchivo, this.file.getInputstream())) {
                             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser subir el archivo para procesar. por favor vuelva a enviar", "");
                             FacesContext.getCurrentInstance().addMessage(null, msg);
                             return;
                         }
                     }
+                    archivoProcesado.setTipoProceso("CA");
+                    archivoProcesado.setEstado(erroresProceso ? "AI" : "CA");
+                    archivoProcesado.setNombreArchivo(nombreArchivo);
+
+                    ArchivoProcesado arch = negocioArchivoProcesado.crear(this.archivoProcesado);
+                    //negocioArchivoProcesado.;
+                    BigDecimal codigo = arch.getCodigoProceso();
+                    //registar errores
+                    if (erroresProceso) {
+                        ErrorValidacion error = new ErrorValidacion();
+                        for (String items : respuesta) {
+                            error.setCodigoProceso(codigo);
+                            error.setDescripcion(items);
+                            negocioArchivoProcesado.registrarErrorValidacion(error);
+                        }
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "El Archivo tiene errores por favor validar ", "");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                        return;
+                    } 
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, " Nombre de archivo no valido", "");
@@ -291,5 +288,5 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     public void setErrorDato(boolean errorDato) {
         this.errorDato = errorDato;
     }
-
+    
 }

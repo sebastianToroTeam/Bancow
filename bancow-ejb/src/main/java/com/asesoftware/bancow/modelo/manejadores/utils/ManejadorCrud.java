@@ -96,7 +96,7 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
     public void postCrear() {
 
     }
-
+    
     /**
      * {@inheritDoc}
      *
@@ -418,7 +418,7 @@ public abstract class ManejadorCrud<T, U> implements IManejadorCrud<T, U> {
     public boolean registrarErrorValidacion(ErrorValidacion error) {
 
         try {
-            String insert = "INSERT INTO BANCOW.ERROR_VALIDACION (DESCRIPCION, ARC_PROC_CODIGO_PROCESO, REG_ARC_NUMERO) VALUES ('%s', '%d', '%d') ";
+            String insert = "INSERT INTO BANCOW.ERROR_VALIDACION (DESCRIPCION, ARC_PROC_CODIGO_PROCESO, REG_ARC_NUMERO) VALUES ('%s', '%s', '%s') ";
             String Query = String.format(insert, error.getDescripcion(), error.getCodigoProceso(), error.getNumeroRegistro());
             Query q = (Query) mp.doNativeQuery(Query);
             q.executeUpdate();

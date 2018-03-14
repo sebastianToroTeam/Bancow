@@ -76,5 +76,10 @@ public class ManejadorArchivoProcesado extends ManejadorCrud<ArchivoProcesado, B
         
         return resp;
     }
+        
+    @Override
+    public void crear(ArchivoProcesado pData) {        
+        mp.createFlush(pData);
+    }
     // protected region Use esta region para su implementacion del manejador end        
 }
