@@ -1434,3 +1434,8 @@ small {
 	-webkit-transform: rotate(-90.0deg); /* Safari 3.1+, Chrome */
 	transform: rotate(-90.0deg); /* Standard */
 }
+
+.companyHeaderGrid.ui-panelgrid>*>tr,
+.companyHeaderGrid.ui-panelgrid>*>tr>td {
+    border: none;
+}

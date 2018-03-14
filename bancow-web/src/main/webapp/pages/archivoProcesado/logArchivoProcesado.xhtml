@@ -11,39 +11,43 @@
         <div class="ui-g">
             <div class="ui-g-12 ui-md-12 ui-g-nopad">
                 <div class="ui-g-12">
-                    
-                        <!-- <p:growl id="growl" showDetail="true" />-->						
 
-                        <div class="ui-g-12 ui-g-nopad">
-                            <div class="ui-g">
-                                <div class="ui-g-12 ui-md-12">
-                                    <h:form>
+                    <!-- <p:growl id="growl" showDetail="true" />-->						
+
+                    <div class="ui-g-12 ui-g-nopad">
+                        <div class="ui-g">
+                            <div class="ui-g-12 ui-md-12">
+                                <h:form>
+                                    <p:panelGrid columns="4" styleClass="companyHeaderGrid" >
                                         <h:outputLabel value="Tipo: " for="selTipoProc"/>
                                         <h:selectOneMenu id="selTipoProc" value="#{controlador.tipoProcesoSeleccionado}">
                                             <p:ajax event="change" update="@this" />
                                             <f:selectItem itemLabel="TODOS" itemValue="#{null}"/>
                                             <f:selectItems value="#{controlador.tiposProceso}" var="elem" itemLabel="#{elem.descripcion}" itemValue="#{elem.valor}"/>
                                         </h:selectOneMenu>
-                                        <br/>
+                                        <h:outputText/>
+                                        <h:outputText/>
                                         <h:outputLabel value="ID: " for="filtroId"/>
                                         <p:inputNumber id="filtroId" value="#{controlador.filtroId}"/>
-
-                                        <br/>
+                                        <h:outputText/>
+                                        <h:outputText/>
+                                        
                                         <h:outputLabel value="FEHCA DESDE: " for="filtroFechaIni"/>
                                         <p:calendar id="filtroFechaIni" value="#{controlador.filtroFechaIni}"/>
 
                                         <h:outputLabel value="FEHCA HASTA: " for="filtroFechaFin"/>
                                         <p:calendar id="filtroFechaFin" value="#{controlador.filtroFechaFin}"/>
 
-                                        <br/>
+                                        
                                         <p:commandButton value="Filtrar" actionListener="#{controlador.search()}"
                                                          ajax="false" process="@parent"/>
-                                    </h:form>
-                                </div>
+                                    </p:panelGrid>
+                                </h:form>
+                            </div>
 
 
-                                <div class="ui-g-12 ui-md-12">
-                                    <h:form id="logRegistros">
+                            <div class="ui-g-12 ui-md-12">
+                                <h:form id="logRegistros">
                                     <p:dataTable id="ResultData" var="registroArchivo"
                                                  value="#{controlador.registroArchivos}" reflow="true"
                                                  widgetVar="entidadTable"
@@ -172,25 +176,25 @@
 
 
                                     </p:dataTable>
-                                        </h:form>
+                                </h:form>
 
-                                    <p:dataTable id="erroresLista" value="#{controlador.erroresValidacion}" var="ev"
-                                                 rendered="#{controlador.erroresValidacion ne null and controlador.erroresValidacion.size() gt 0}" widgetVar="erroresTable">
-                                        <p:column>
-                                            <f:facet name="header">
-                                                <h:outputText value="ERRORES"/>
-                                            </f:facet>
-                                            <h:outputText value="#{ev.descripcion}"/>
-                                        </p:column>
-                                        
-                                    </p:dataTable>
-                                </div>
+                                <p:dataTable id="erroresLista" value="#{controlador.erroresValidacion}" var="ev"
+                                             rendered="#{controlador.erroresValidacion ne null and controlador.erroresValidacion.size() gt 0}" widgetVar="erroresTable">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="ERRORES"/>
+                                        </f:facet>
+                                        <h:outputText value="#{ev.descripcion}"/>
+                                    </p:column>
+
+                                </p:dataTable>
                             </div>
                         </div>
+                    </div>
 
 
 
-                    
+
 
                 </div>
 
