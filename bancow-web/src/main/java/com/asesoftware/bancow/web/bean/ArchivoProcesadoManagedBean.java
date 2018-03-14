@@ -82,7 +82,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ArchivoProcesadoManagedBean.class.getName());
 
-    private static final String iTextExampleImage = "\\..\\resources\\images\\banco-wwb-logo.png";
+    private static final String iTextExampleImage = "/home/aswadmin/archivos/banco-wwb-logo.png";
 
     private ArchivoProcesado archivoProcesado;
     private List<ArchivoProcesado> archivoProcesadoList;
@@ -428,15 +428,10 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-        String urlImage = request.getRequestURL().toString();
-
-        urlImage = urlImage.replaceFirst(request.getRequestURI(), "/bancow-web/resources/images/banco-wwb-logo.png");
-        System.out.println("url path: " + urlImage);
-
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String path = servletContext.getRealPath("/resources/images/banco-wwb-logo.png");
 
-        String pathfile = servletContext.getRealPath("/");
+        String pathfile = "/home/aswadmin/archivos/";
 
         try {
 
@@ -444,7 +439,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
                 SimpleDateFormat format = new SimpleDateFormat("yyyyMMddhhmmss");
 
                 file = file + format.format(new Date()) + ".pdf";
-                PdfWriter.getInstance(document, new FileOutputStream(pathfile + "/resources/" + file));
+                PdfWriter.getInstance(document, new FileOutputStream(pathfile + file));
 
             } catch (FileNotFoundException fileNotFoundException) {
                 System.out.println("No such file was found to generate the PDF "
@@ -464,7 +459,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
 
             Image image;
             try {
-                image = Image.getInstance(urlImage);
+                image = Image.getInstance(iTextExampleImage);
                 //image.setAbsolutePosition(0,0);
                 image.setAlignment(image.LEFT | image.TEXTWRAP);
                 image.scalePercent(img);
@@ -567,7 +562,7 @@ public class ArchivoProcesadoManagedBean implements Serializable {
             response.setContentType("application/pdf");
             response.setHeader("Content-disposition", "attachment;filename=" + file);
             try {
-                File f = new File(pathfile + "/resources/" + file);
+                File f = new File(pathfile + file);
                 FileInputStream fis = new FileInputStream(f);
                 DataOutputStream os = new DataOutputStream(response.getOutputStream());
                 response.setHeader("Content-Length", String.valueOf(f.length()));

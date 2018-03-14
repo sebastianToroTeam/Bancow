@@ -35,7 +35,7 @@ import java.util.Date;
 @ManagedBean
 @ViewScoped
 public class LogArchivoProcesadoManagedBean implements Serializable {
-
+    
     /**
      *
      */

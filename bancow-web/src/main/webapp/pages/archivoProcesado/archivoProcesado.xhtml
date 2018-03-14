@@ -18,26 +18,30 @@
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-12">
                                     <h:form>
+                                        <p:panelGrid columns="4" styleClass="companyHeaderGrid" >
                                         <h:outputLabel value="Tipo: " for="selTipoProc"/>
                                         <h:selectOneMenu id="selTipoProc" value="#{controlador.tipoProcesoSeleccionado}">
                                             <p:ajax event="change" update="@this" />
                                             <f:selectItem itemLabel="TODOS" itemValue="#{null}"/>
                                             <f:selectItems value="#{controlador.tiposProceso}" var="elem" itemLabel="#{elem.descripcion}" itemValue="#{elem.valor}"/>
                                         </h:selectOneMenu>
-                                        <br/>
+                                        <h:outputText/>
+                                        <h:outputText/>
                                         <h:outputLabel value="ID: " for="filtroId"/>
                                         <p:inputNumber id="filtroId" value="#{controlador.filtroId}"/>
 
-                                        <br/>
+                                        <h:outputText/>
+                                        <h:outputText/>
                                         <h:outputLabel value="FEHCA DESDE: " for="filtroFechaIni"/>
                                         <p:calendar id="filtroFechaIni" value="#{controlador.filtroFechaIni}"/>
 
                                         <h:outputLabel value="FEHCA HASTA: " for="filtroFechaFin"/>
                                         <p:calendar id="filtroFechaFin" value="#{controlador.filtroFechaFin}"/>
                                         
-                                        <br/>
+                                        
                                         <p:commandButton value="Filtrar" actionListener="#{controlador.search()}"
                                                          ajax="false" process="@parent"/>
+                                        </p:panelGrid>
                                     </h:form>
                                 </div>
 
