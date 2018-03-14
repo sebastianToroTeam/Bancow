@@ -15,12 +15,7 @@
 
 						<div class="ui-g-12 ui-g-nopad">
 							<div class="ui-g">
-								<div class="ui-g-12 ui-md-12">Lorem ipsum dolor sit amet,
-									consectetur adipiscing elit. Sed imperdiet, orci nec dictum
-									convallis, ligula mauris vestibulum turpis, nec varius tortor
-									quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus
-									quis vulputate. Pellentesque nec dui aliquam, lobortis est in,
-									lobortis ante</div>
+                                                            <div class="ui-g-12 ui-md-12"><b>Usuario</b></div>
 
 								<div class="ui-g-12 ui-md-12">
 									<p:panel header="Crear Usuario">
@@ -29,27 +24,33 @@
 										<h:panelGrid columns="4" cellpadding="5">
 											<h:outputLabel for="usuario_login" value="Login:" />
 											<p:inputText id="usuario_login"
-												value="#{controlador.usuario.login}" label="Login" />
+												value="#{controlador.usuario.login}" label="Login" required="true" />
 											<p:message for="usuario_login" />
 											<h:outputText value="#{controlador.usuario.login}" />
 											<h:outputLabel for="usuario_pwd" value="Pwd:" />
 											<p:inputText id="usuario_pwd"
-												value="#{controlador.usuario.pwd}" label="Pwd" />
+												value="#{controlador.usuario.pwd}" label="Pwd" required="true" />
 											<p:message for="usuario_pwd" />
 											<h:outputText value="#{controlador.usuario.pwd}" />
-											<h:outputLabel for="usuario_rol" value="Rol:" />
-											<p:inputText id="usuario_rol"
-												value="#{controlador.usuario.rol}" label="Rol" />
+											<h:outputLabel for="usuario_rol" value="Rol:" />											
+                                                                                        <p:selectOneMenu id="usuario_rol" value="#{controlador.usuario.rol}" required="true" label="Estado">
+                                                                                                            <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                                            <f:selectItem itemLabel="Administrador" itemValue="ADM"  />
+                                                                                                            <f:selectItem itemLabel="Inactivo" itemValue="INV" />
+                                                                                                         </p:selectOneMenu>
 											<p:message for="usuario_rol" />
 											<h:outputText value="#{controlador.usuario.rol}" />
 											<h:outputLabel for="usuario_estado" value="Estado:" />
-											<p:inputText id="usuario_estado"
-												value="#{controlador.usuario.estado}" label="Estado" />
+											<p:selectOneMenu id="usuario_estado" value="#{controlador.usuario.estado}" required="true" label="Estado">
+                                                                                                            <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                                            <f:selectItem itemLabel="Activo" itemValue="A"  />
+                                                                                                            <f:selectItem itemLabel="Inactivo" itemValue="I" />
+                                                                                                         </p:selectOneMenu>
 											<p:message for="usuario_estado" />
 											<h:outputText value="#{controlador.usuario.estado}" />
-											<h:outputLabel for="usuario_funcionarioNumeroId" value="FuncionarioNumeroId:" />
+											<h:outputLabel for="usuario_funcionarioNumeroId" value="Identificación Funcionario:" />
 											<p:inputNumber id="usuario_funcionarioNumeroId"
-												value="#{controlador.usuario.funcionarioNumeroId}" label="FuncionarioNumeroId" />
+												value="#{controlador.usuario.funcionarioNumeroId}"  required="true" label="FuncionarioNumeroId" />
 											<p:message for="usuario_funcionarioNumeroId" />
 											<h:outputText value="#{controlador.usuario.funcionarioNumeroId}" />
 										</h:panelGrid>

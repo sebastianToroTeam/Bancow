@@ -21,7 +21,7 @@ public class SubirFtp {
 
     
     public static boolean subirArchivoFtp(String nombreArchivo, InputStream inputstreamFile) {
-        System.out.println("------------------- INICIO");
+        
         boolean respuesta = false;
         ChannelSftp sftp = null;
         Session session = null;
@@ -38,12 +38,9 @@ public class SubirFtp {
             sftp.connect();
 
             sftp.cd(Constantes.RUTA_SERVER);
-            System.out.println(nombreArchivo);
             sftp.put(inputstreamFile, nombreArchivo);
-
-            System.out.println("Archivos subidos.");           
+           
             respuesta = true;
-            System.out.println("----------------- FIN");
         } catch (Exception ex) {
             respuesta = false;
         } finally {

@@ -3,7 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
-
+<ui:param name="controlador" value="#{loginBean}" />
 
 	<div id="layout-header" class="Unselectable fontRegular">
 		<a href="inicio.xhtml" id="layout-logo"> <h:graphicImage
@@ -19,13 +19,9 @@
 					class="layout-header-widgets-submenu BordRad5 shadows white Animated05">
 					<li class="Animated05"><a class="white Unselectable"><i
 							class="icon-user-male Fs26 OvHidden"></i><span class="Fs18">#{domainUtils.user.primerNombre}
-								#{domainUtils.user.primerApellido}<br />
+								#{usuario.login}<br />
 							<span class="Fs10">#{domainUtils.user.email}</span>
-						</span></a></li>
-					<li class="Animated05"><a href="#" class="white Unselectable"><i
-							class="icon-users-2"></i>#{domainUtils.user.rolPersonaList[0].rol.nombre}</a></li>
-					<li class="Animated05"><a href="#" class="white Unselectable"><i
-							class="icon-sliders"></i>#{domainUtils.nameSede}</a></li>
+						</span></a></li>					
 				</ul></li>
 			<li class="Fleft BordRadHalf TexAlCenter"><i class="icon-power"></i>
 				<ul
@@ -33,7 +29,7 @@
 					<li class="Animated05"><h:form prependId="false">
 <!-- 							<a class="white Unselectable">  -->
 								<p:commandLink styleClass="white Unselectable"
-										actionListener="#{shiroLoginBean.logout}">
+										actionListener="#{controlador.logout}">
 										<i class="icon-logout"></i>Salir
 								</p:commandLink>
 <!-- 							</a> -->

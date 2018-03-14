@@ -16,7 +16,7 @@
                         <div class="ui-g-12 ui-g-nopad">
                             <div class="ui-g">
                                 <div class="ui-g-12 ui-md-12">
-                                    <b>Ten en cuenta:</b><br></br>
+                                    <center><b>Recomendaciones:</b></center><br></br>
                                     <b>1.  El convenios seleccionado debe estar habilitados</b><br></br>
                                     <b>2.  La fecha seleccionada debe ser igual a la fecha del encabezado del archivo a cargar</b><br></br>
                                 </div>
@@ -24,11 +24,12 @@
                                 <div class="ui-g-12 ui-md-12">
                                     <p:panel header="Crear ArchivoProcesado">
                                         <p:messages />
-
+                                        <p:growl id="message" showDetail="true" />
                                         <h:panelGrid columns="4" cellpadding="5">
 
                                             <h:outputLabel for="archivoProcesado_nombreArchivo" value="NombreArchivo:" />
-                                            <p:fileUpload value="#{controlador.file}" mode="simple" skinSimple="true" label="Seleccione Archivo" required="true" />
+                                            <p:fileUpload value="#{controlador.file}" mode="advanced" skinSimple="true" multiple="false"
+                                                           allowTypes="/(\.|\/)(txt)$/" label="Seleccione Archivo" update="message" required="true" />
 
                                             <h:outputLabel for="archivoProcesado_fechaEjecucion" value="FechaEjecucion:" />
                                             <p:calendar id="archivoProcesado_fechaEjecucion"
@@ -50,7 +51,7 @@
                                     <p:commandButton
                                         actionListener="#{controlador.createArchivoProcesado()}"
                                         value="Crear" ajax="false" validateClient="true"
-                                        process="@parent" icon="ui-icon-check" />
+                                        process="@parent" icon="ui-icon-check" update="formResultado:ResultData" />
                                 </div>
                             </div>
                         </div>
@@ -58,10 +59,10 @@
                 </div>
             </div>
         </div>
-        <h:form>
+        <h:form id="formResultado">
             <div id="tabla">
                 <div class="ui-g-12 ui-md-12">
-                    <p:dataTable value="#{fileUploadManagedBean.respuesta}" id="ResultData" var="car" widgetVar="entidadTable"
+                    <p:dataTable value="#{controlador.respuesta}" id="ResultData" var="car" widgetVar="entidadTable"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} "
                                  paginator="true" rows="10" style="margin-bottom:20px" >
                         <p:column > 

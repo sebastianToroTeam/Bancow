@@ -37,8 +37,6 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     UploadedFile file;
     List<String> respuesta;
     private boolean errorDato;
-    List<String> listaRespuesta;
-    List<RegistroArchivo> ListaDatos;
 
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(ArchivoProcesadoFormManagedBean.class.getName());
@@ -53,85 +51,99 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
     /**
      *
      */
-    public void createArchivoProcesado(){
+    public void createArchivoProcesado() {
         respuesta = new ArrayList<>();
-        listaRespuesta = new ArrayList<>();
         try {
             //validar archivo
             //this.file = this.file.getInputstream();
             Date fecha = this.archivoProcesado.getFechaEjecucion();
             //validar si archivo ya fue cargado anteriormente
-            String nombreArchivo = file.getFileName();
-            if (negocioArchivoProcesado.validarNombreArchivo(nombreArchivo)) {
-                FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, nombreArchivo, " Ya fue cargado");
-                FacesContext.getCurrentInstance().addMessage(null, msg);
-                FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesado.xhtml");
-            }
-            //validar si convenio existe
-            //validarconvenio
-            String[] convenio = nombreArchivo.split("-");
-            String nombreConvenio = convenio.length > 1 ? convenio[0] : null;
-            if (nombreConvenio != null) {
-                System.err.println(nombreConvenio);
-                List<Convenio> listaConvenios = getListaConvenios();
-                if (!listaConvenios.isEmpty()) {
-                    boolean existeConvenio = false;
-                    for (Convenio items : listaConvenios) {
-                        if (items.getNombre().equals(nombreConvenio)) {
-                            existeConvenio = true;
-                            break;
+            boolean sinErroresProceso = true;
+            String nombreArchivo = file.getFileName().length()>1?file.getFileName():null;
+            if (nombreArchivo != null) {
+                if (negocioArchivoProcesado.validarNombreArchivo(nombreArchivo)) {
+                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, nombreArchivo, " Ya fue cargado");
+                    FacesContext.getCurrentInstance().addMessage(null, msg);
+                    sinErroresProceso = false;
+                }
+                //validar si convenio existe
+                //validarconvenio
+                String[] convenio = nombreArchivo.split("-");
+                String nombreConvenio = convenio.length > 1 ? convenio[0] : null;
+                if (nombreConvenio != null) {
+                    System.err.println(nombreConvenio);
+                    List<Convenio> listaConvenios = getListaConvenios();
+                    if (!listaConvenios.isEmpty()) {
+                        boolean existeConvenio = false;
+                        for (Convenio items : listaConvenios) {
+                            if (items.getNombre().equals(nombreConvenio)) {
+                                existeConvenio = true;
+                                break;
+                            }
+                        }
+                        if (!existeConvenio) {
+                            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, " Nombre de Convenio no valido, se ingreso: ", nombreConvenio);
+                            FacesContext.getCurrentInstance().addMessage(null, message);
+                            sinErroresProceso = false;
+                            return;
                         }
                     }
-                    if (!existeConvenio) {
-                        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, " Nombre de Convenio no valido, se ingreso: ", nombreConvenio);
-                        FacesContext.getCurrentInstance().addMessage(null, message);
-                        FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesado.xhtml");
+                } else {
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, " Nombre de archivo no valido", "");
+                    FacesContext.getCurrentInstance().addMessage(null, message);
+                    sinErroresProceso = false;
+                    return;
+                }
+                ///fin convenio
+                //inicio archivo
+                if (sinErroresProceso) {
+                    validarContenido();
+                    //Registrar el archivo
+                    boolean erroresProceso = false;
+                    if (respuesta != null && !respuesta.isEmpty()) {
+                        erroresProceso = true;
+                    }
+                    archivoProcesado.setTipoProceso("CA");
+                    archivoProcesado.setEstado(erroresProceso ? "AI" : "CA");
+                    archivoProcesado.setNombreArchivo(nombreArchivo);
+
+                    negocioArchivoProcesado.crear(this.archivoProcesado);
+                    //negocioArchivoProcesado.;
+
+                    BigDecimal codigo = archivoProcesado.getCodigoProceso();
+
+                    //registar errores
+                    if (erroresProceso) {
+                        ErrorValidacion error = new ErrorValidacion();
+                        for (String items : respuesta) {
+                            error.setCodigoProceso(codigo);
+                            error.setDescripcion(items);
+                            //error.setNumeroRegistro(1);
+                            negocioArchivoProcesado.registrarErrorValidacion(error);
+                        }
+                        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "El Archivo tiene errores por favor validar ", "");
+                        FacesContext.getCurrentInstance().addMessage(null, msg);
+                        return;
+                    } else {
+                        //registrar el archivo en el ftp
+                        if (!SubirFtp.subirArchivoFtp(nombreArchivo, this.file.getInputstream())) {
+                            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser subir el archivo para procesar. por favor vuelva a enviar", "");
+                            FacesContext.getCurrentInstance().addMessage(null, msg);
+                            return;
+                        }
                     }
                 }
             } else {
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, " Nombre de archivo no valido", "");
                 FacesContext.getCurrentInstance().addMessage(null, message);
-                FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesado.xhtml");
+                return;
             }
-            ///fin convenio
-            //inicio archivo
-            validarContenido();
-            //Registrar el archivo
-            boolean erroresProceso = false;
-            if(respuesta != null && !respuesta.isEmpty()){
-                erroresProceso = true;
-            }
-            archivoProcesado.setTipoProceso("CA");
-            archivoProcesado.setEstado(erroresProceso ? "AI":"CA");
-            archivoProcesado.setNombreArchivo(nombreArchivo);
-
-            negocioArchivoProcesado.crear(this.archivoProcesado);
-            //negocioArchivoProcesado.edit(archivoProcesado);
-
-            BigDecimal codigo = archivoProcesado.getCodigoProceso();
-
-            //registar errores
-            if (erroresProceso) {
-                ErrorValidacion error = new ErrorValidacion();
-                for (String items : respuesta) {
-                    error.setCodigoProceso(codigo);
-                    error.setDescripcion(items);
-                    //error.setNumeroRegistro(1);
-                    negocioArchivoProcesado.registrarErrorValidacion(error);
-                }
-            } else {
-                //registrar el archivo en el ftp
-                if(!SubirFtp.subirArchivoFtp(nombreArchivo,this.file.getInputstream())){
-                    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser subir el archivo para procesar. por favor vuelva a enviar","");
-                    FacesContext.getCurrentInstance().addMessage(null, msg);
-                }                 
-            }
-            FacesContext.getCurrentInstance().getExternalContext().redirect("archivoProcesadoForm.xhtml");
         } catch (IOException ex) {
             // TODO Auto-generated catch block
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registro no pudo ser creado", "Corrija los datos");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Archivo cargado exitosamente, se procede a realizar validación de contenido. por favor consulte el log para mas información"));
     }
 
     /*
@@ -172,15 +184,11 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
 
                     if (numeroFilas != 3) {
                         Errorlabel = String.format(Constantes.ERROR_NEG_1, Constantes.encabezadoField, cont, Constantes.TipoErroFormatoField, "no tiene el número de campos especificado (3)");
-                        listaRespuesta.add(Integer.toString(cont));
-                        listaRespuesta.add(Errorlabel);
                         respuesta.add(Errorlabel);
                     } else {
                         String fecha = format.format(this.archivoProcesado.getFechaEjecucion());
                         if (!fecha.equals(fields[0])) {
                             Errorlabel = String.format(Constantes.ERROR_NEG_1, Constantes.encabezadoField, cont, Constantes.TipoErroValortoField, " Error en la fecha seleccionada ");
-                            listaRespuesta.add(Integer.toString(cont));
-                            listaRespuesta.add(Errorlabel);
                             respuesta.add(Errorlabel);
                         }
                         //registrar los valores del encabezado
@@ -198,8 +206,6 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
                 }// fin while
             } else {
                 errorGeneral = String.format(Constantes.ERROR_NEG_1, Constantes.encabezadoField, cont, Constantes.TipoErroValortoField, " Archivo vacio ");
-                listaRespuesta.add("1");
-                listaRespuesta.add(errorGeneral);
                 respuesta.add(errorGeneral);
             }
             //cerar archivo
@@ -219,15 +225,11 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
             if (item.isEmpty()) {
                 errorGeneral = String.format(Constantes.ERROR_NEG_2, encabezado ? Constantes.encabezadoField : Constantes.detalleField, fila, Constantes.TipoErroValortoField, " Dato vacio ");
                 this.errorDato = true;
-                listaRespuesta.add(Integer.toString(fila));
-                listaRespuesta.add(errorGeneral);
                 respuesta.add(errorGeneral);
             } else {
                 if (!isNumeric(item)) {
                     errorGeneral = String.format(Constantes.ERROR_NEG_2, encabezado ? Constantes.encabezadoField : Constantes.detalleField, fila, Constantes.TipoErroValortoField, item);
                     this.errorDato = true;
-                    listaRespuesta.add(Integer.toString(fila));
-                    listaRespuesta.add(errorGeneral);
                     respuesta.add(errorGeneral);
                 }
             }
@@ -249,7 +251,6 @@ public class ArchivoProcesadoFormManagedBean implements Serializable {
         }
     }
 
-    
     //********************************************************
     /**
      *

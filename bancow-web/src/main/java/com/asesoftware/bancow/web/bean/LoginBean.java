@@ -2,7 +2,6 @@ package com.asesoftware.bancow.web.bean;
 
 import com.asesoftware.bancow.modelo.entidades.Usuario;
 import com.asesoftware.bancow.negocio.NegocioUsuario;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import org.primefaces.context.RequestContext;
+import org.jboss.shrinkwrap.impl.base.ExtensionLoadingException;
 
 /**
  *
@@ -82,7 +81,16 @@ public class LoginBean {
         }
         return null;
     }
-    
+    public void logout() throws IOException{
+        try{
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpSession session = (HttpSession) facesContext.getExternalContext().getSession(true);
+        session.invalidate();
+        FacesContext.getCurrentInstance().getExternalContext().redirect("pages/index");
+        }catch(ExtensionLoadingException ex){
+            FacesContext.getCurrentInstance().getExternalContext().redirect("pages/index");
+        }
+    }
     public void addErrorMessage(String summary) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, summary,  null);
         FacesContext.getCurrentInstance().addMessage(null, message);

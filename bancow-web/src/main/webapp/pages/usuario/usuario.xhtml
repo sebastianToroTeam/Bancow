@@ -17,12 +17,7 @@
 						<div class="ui-g-12 ui-g-nopad">
 							<div class="ui-g">
 								<div class="ui-g-12 ui-md-12">
-									Lorem ipsum dolor sit amet,
-									consectetur adipiscing elit. Sed imperdiet, orci nec dictum
-									convallis, ligula mauris vestibulum turpis, nec varius tortor
-									quam at diam. Nullam a viverra nibh. In tincidunt tempor lectus
-									quis vulputate. Pellentesque nec dui aliquam, lobortis est in,
-									lobortis ante
+                                                                    <b>Lista de Usuarios</b>
 								</div>
 								
 								<ui:include src="../filterTemplate.xhtml"/>
@@ -92,10 +87,14 @@
 											</f:facet>
 											<p:cellEditor>
 												<f:facet name="output">
-													<h:outputText value="#{usuario.rol}" />
+													<h:outputText value="#{usuario.rol == 'ADM' ? 'Administrador' : 'Invitado'}" />
 												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{usuario.rol}" style="width:100%" />
+												<f:facet name="input">													
+                                                                                                        <p:selectOneMenu  value="#{usuario.rol}" required="true" label="Estado">
+                                                                                                            <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                                            <f:selectItem itemLabel="Administrador" itemValue="ADM"  />
+                                                                                                            <f:selectItem itemLabel="Invitado" itemValue="INV" />
+                                                                                                         </p:selectOneMenu>
 												</f:facet>
 											</p:cellEditor>
 										</p:column>	
@@ -104,17 +103,21 @@
 												<h:outputText value="Estado" />
 											</f:facet>
 											<p:cellEditor>
-												<f:facet name="output">
-													<h:outputText value="#{usuario.estado}" />
+												<f:facet name="output">													
+                                                                                                        <h:outputText value="#{usuario.estado == 'A' ? 'Activo' : 'Inactivo'}" />
 												</f:facet>
-												<f:facet name="input">
-													<p:inputText value="#{usuario.estado}" style="width:100%" />
+												<f:facet name="input">													
+                                                                                                        <p:selectOneMenu  value="#{usuario.estado}" required="true" label="Estado">
+                                                                                                            <f:selectItem itemLabel="Seleccione" itemValue="" noSelectionOption="true" />
+                                                                                                            <f:selectItem itemLabel="Activo" itemValue="A"  />
+                                                                                                            <f:selectItem itemLabel="Inactivo" itemValue="I" />
+                                                                                                         </p:selectOneMenu>
 												</f:facet>
 											</p:cellEditor>
 										</p:column>	
 										<p:column>
 											<f:facet name="header">
-												<h:outputText value="FuncionarioNumeroId" />
+												<h:outputText value="Identificación Funcionario" />
 											</f:facet>
 											<p:cellEditor>
 												<f:facet name="output">

@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
  * @author Asesoftware
  */
 
-//@WebFilter(filterName = "UsuarioRegistradoLogin", urlPatterns = {"/*"})
+@WebFilter(filterName = "UsuarioRegistradoLogin", urlPatterns = {"/*"})
 public class UsuarioRegistradoLogin implements Filter{
     
     private static final String AJAX_REDIRECT_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
